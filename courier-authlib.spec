@@ -210,8 +210,15 @@ sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
     | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
 sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
 fi
+if [ -f /var/lock/subsys/courier ]; then
+    if [ -f /var/spool/courier/authdaemon/pid ]; then
+	kill `cat /var/spool/courier/authdaemon/pid`
+	rm -f /var/spool/courier/authdaemon/*
+	/etc/rc.d/init.d/courier-authlib start
+    fi
+fi
 
-%triggerin -- courier-imap < 4.0.0
+%triggerin -- courier-imap-common < 4.0.0
 if [ -f /etc/courier-imap/authdaemonrc ]; then
 . /etc/courier-imap/authdaemonrc
 
@@ -220,6 +227,13 @@ sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
 sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
     | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
 sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+fi
+if [ -f /var/lock/subsys/courier-imap ]; then
+    if [ -f /var/lib/authdaemon/pid ]; then
+	kill `cat /var/lib/authdaemon/pid`
+	rm -f /var/lib/authdaemon/*
+	/etc/rc.d/init.d/courier-authlib start
+    fi
 fi
 
 %triggerin -- sqwebmail < 5.0.0
@@ -231,6 +245,13 @@ sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
 sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
     | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
 sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+fi
+if [ -f /var/lock/subsys/sqwebmail ]; then
+    if [ -f /var/spool/sqwebmail/authdaemon/pid ]; then
+	kill `cat /var/spool/sqwebmail/authdaemon/pid`
+	rm -f /var/spool/sqwebmail/authdaemon/*
+	/etc/rc.d/init.d/courier-authlib start
+    fi
 fi
 
 %triggerin -n %{name}-authldap -- courier-authldap < 0.48
