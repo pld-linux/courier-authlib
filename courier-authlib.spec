@@ -15,8 +15,6 @@ Group:		Networking/Daemons
 Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.%{snap}.tar.bz2
 # Source0-md5:	d6afed924f2195f55e17082336d679a7
 URL:		http://www.courier-mta.org/
-Requires(post,preun):	/sbin/chkconfig
-Requires(post,postun):	/sbin/ldconfig
 BuildRequires:	expect
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
@@ -25,6 +23,8 @@ BuildRequires:	openldap-devel
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	zlib-devel
+Requires(post,preun):	/sbin/chkconfig
+Requires(post):	/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
