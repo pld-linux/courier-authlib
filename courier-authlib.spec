@@ -16,6 +16,7 @@ Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.%{sn
 # Source0-md5:	d6afed924f2195f55e17082336d679a7
 URL:		http://www.courier-mta.org/
 Requires(post,preun):	/sbin/chkconfig
+Requires(post,postun):	/sbin/ldconfig
 BuildRequires:	expect
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
@@ -138,7 +139,7 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 
-install courier-authlib.sysvinit $RPM_BUILD_ROOT/etcdir}/rc.d/init.d/courier-authlib
+install courier-authlib.sysvinit $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
 
 # make config files
 ./sysconftool $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
@@ -151,7 +152,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
 rm -rf $RPM_BUILD_ROOT
 
 %post
-%{_libexecdir}/courier-authlib/authmigrate >/dev/null
+/sbin/ldconfig
 
 /sbin/chkconfig --add courier-authlib
 
@@ -164,6 +165,8 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del courier-authlib
 fi
 
+%postun	-p /sbin/ldconfig
+
 %files
 %defattr(644,root,root,755)
 # COPYING contains only note
@@ -171,10 +174,22 @@ fi
 %dir %{_sysconfdir}/authlib
 %dir %{_libexecdir}/courier-authlib
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/courier-authlib
-%attr(755,root,root) %{_sysconfdir}/authlib/authdaemonrc
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authdaemonrc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authdaemond
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authsystem.passwd
 %attr(755,root,root) %{_libexecdir}/courier-authlib/makedatprog
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthcustom.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpam.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauth.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthcommon.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsasl.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so.*.*.*
+%{_libexecdir}/courier-authlib/libauthcustom.la
+%{_libexecdir}/courier-authlib/libauthpam.la
+%{_libexecdir}/courier-authlib/libcourierauth.la
+%{_libexecdir}/courier-authlib/libcourierauthcommon.la
+%{_libexecdir}/courier-authlib/libcourierauthsasl.la
+%{_libexecdir}/courier-authlib/libcourierauthsaslclient.la
 %attr(770,root,daemon) %dir %{_localstatedir}/spool/authdaemon
 %attr(755,root,root) %{_sbindir}/authdaemond
 %attr(755,root,root) %{_sbindir}/authenumerate
@@ -193,17 +208,20 @@ fi
 %defattr(644,root,root,755)
 %doc authldap.schema README.ldap
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authldaprc
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthldap*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthldap.so.*.*.*
+%{_libexecdir}/courier-authlib/libauthldap.la
 
 %files authmysql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authmysqlrc
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthmysql*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthmysql.so.*.*.*
+%{_libexecdir}/courier-authlib/libauthmysql.la
 
 %files authpgsql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authpgsqlrc
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpgsql*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpgsql.so.*.*.*
+%{_libexecdir}/courier-authlib/libauthpgsql.la
 
 %files userdb
 %defattr(644,root,root,755)
@@ -211,5 +229,6 @@ fi
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdbpw
 %attr(755,root,root) %{_sbindir}/vchkpw2userdb
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
+%{_libexecdir}/courier-authlib/libauthuserdb.la
 %{_mandir}/man8/*userdb*
