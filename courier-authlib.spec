@@ -7,7 +7,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.51
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.tar.bz2
@@ -151,7 +151,9 @@ Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 %{__autoconf}
 %{__automake}
 
-%configure
+%configure \
+	--with-mailuser=daemon \
+	--with-mailgroup=daemon
 
 %{__make}
 
@@ -161,7 +163,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfig}/userdb}
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfig}/authlib/userdb}
 
 install courier-authlib.sysvinit $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
 
@@ -315,17 +317,21 @@ fi
 %triggerin -n %{name}-userdb -- courier-imap-userdb < 4.0.0
 if [ -d /etc/courier-imap/userdb ]; then
     mv -f /etc/courier-imap/userdb/* /etc/authlib/userdb
+    makeuserdb
 fi
 if [ -f /etc/courier-imap/userdb ]; then
     mv -f /etc/courier-imap/userdb /etc/authlib/userdb
+    makeuserdb
 fi
 
 %triggerin -n %{name}-userdb -- sqwebmail-auth-userdb < 5.0.0
 if [ -d /etc/sqwebmail/userdb ]; then
     mv -f /etc/sqwebmail/userdb/* /etc/authlib/userdb
+    makeuserdb
 fi
 if [ -f /etc/sqwebmail/userdb ]; then
     mv -f /etc/sqwebmail/userdb /etc/authlib/userdb
+    makeuserdb
 fi
 
 %files
@@ -387,7 +393,7 @@ fi
 
 %files userdb
 %defattr(644,root,root,755)
-%dir %{_sysconfig}/userdb
+%dir %{_sysconfig}/authlib/userdb
 %attr(755,root,root) %{_sbindir}/makeuserdb
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
