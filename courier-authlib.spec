@@ -59,10 +59,10 @@ i zainstalowaniu ten pakiet mo¿na usun±æ. Pliki z tego pakietu nie s±
 potrzebne w czasie dzia³ania programów.
 
 %package authldap
-Summary:        LDAP support for the Courier authentication library
-Summary(pl):    Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
-Group:          Networking/Daemons
-PreReq:         %{name} = %{version}-%{release}
+Summary:	LDAP support for the Courier authentication library
+Summary(pl):	Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
+Group:		Networking/Daemons
+PreReq:		%{name} = %{version}-%{release}
 Obsoletes:	courier-authldap
 Obsoletes:	courier-imap-authldap
 Obsoletes:	sqwebmail-auth-ldap
@@ -116,9 +116,9 @@ Couriera. Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem
 PostgreSQL.
 
 %package userdb
-Summary:        Userdb support for the Courier authentication library
-Summary(pl):    Obs³uga userdb dla biblioteki uwierzytelniania Couriera
-Group:          Networking/Daemons
+Summary:	Userdb support for the Courier authentication library
+Summary(pl):	Obs³uga userdb dla biblioteki uwierzytelniania Couriera
+Group:		Networking/Daemons
 PreReq:		%{name} = %{version}-%{release}
 Obsoletes:	courier-imap-userdb
 Obsoletes:	sqwebmail-auth-userdb
@@ -183,16 +183,16 @@ fi
 
 %post authldap
 if ps -A |grep -q authdaemond.lda; then
-        %{_libexecdir}/courier-authlib/authdaemond stop
-        %{_libexecdir}/courier-authlib/authdaemond start
+	%{_libexecdir}/courier-authlib/authdaemond stop
+	%{_libexecdir}/courier-authlib/authdaemond start
 fi
 
 %postun authldap
 if [ -x %{_libexecdir}/courier-authlib/authdaemond ]; then
-        if ps -A |grep -q authdaemond.lda; then
-                %{_libexecdir}/courier-authlib/authdaemond stop;
-                %{_libexecdir}/courier-authlib/authdaemond start;
-        fi
+	if ps -A |grep -q authdaemond.lda; then
+		%{_libexecdir}/courier-authlib/authdaemond stop;
+		%{_libexecdir}/courier-authlib/authdaemond start;
+	fi
 fi
 
 %files
