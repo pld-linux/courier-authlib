@@ -13,6 +13,7 @@ License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.%{snap}.tar.bz2
 # Source0-md5:	ba73facbd811883feaf63b909e808a1b
+Patch0:		%{name}-build.patch
 URL:		http://www.courier-mta.org/
 BuildRequires:	expect
 BuildRequires:	gdbm-devel
@@ -43,6 +44,10 @@ Summary:	Development files for the Courier authentication library
 Summary(pl):	Pliki programistyczne dla biblioteki uwierzytelniania Couriera
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-authldap = %{version}-%{release}
+Requires:	%{name}-authmysql = %{version}-%{release}
+Requires:	%{name}-authpgsql = %{version}-%{release}
+Requires:	%{name}-userdb = %{version}-%{release}
 
 %description devel
 This package contains the development files needed to compile Courier
@@ -139,8 +144,14 @@ Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 
 %prep
 %setup -q -n %{name}-%{version}.%{snap}
+%patch0 -p1
 
 %build
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__automake}
+
 %configure
 
 %{__make}
@@ -166,7 +177,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/ldconfig
+/sbin/ldconfig %{_libexecdir}/courier-authlib
 
 /sbin/chkconfig --add courier-authlib
 
@@ -179,7 +190,8 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del courier-authlib
 fi
 
-%postun	-p /sbin/ldconfig
+%postun
+/sbin/ldconfig %{_libexecdir}/courier-authlib
 
 %post authldap
 if ps -A |grep -q authdaemond.lda; then
@@ -231,6 +243,7 @@ fi
 %attr(755,root,root) %{_bindir}/courierauthconfig
 %{_includedir}/*
 %{_mandir}/man3/*
+%{_libexecdir}/courier-authlib/*.so
 
 %files authldap
 %defattr(644,root,root,755)
