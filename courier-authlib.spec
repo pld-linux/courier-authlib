@@ -129,7 +129,8 @@ Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 %setup -q
 
 %build
-cp /usr/share/automake/config.sub .
+cp -f /usr/share/automake/config.sub libltdl
+%{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
