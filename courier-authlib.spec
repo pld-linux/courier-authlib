@@ -13,7 +13,7 @@ Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 # Source0-md5:	eb57aefb8460106709d560c40cccaa41
 Patch0:		%{name}-build.patch
-URL:		http://www.courier-mta.org/
+URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	expect
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
@@ -426,6 +426,7 @@ fi
 %defattr(644,root,root,755)
 %dir %{_sysconfdir}/authlib/userdb
 %attr(755,root,root) %{_sbindir}/makeuserdb
+%attr(755,root,root) %{_sbindir}/pw2userdb
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_sbindir}/userdbpw
