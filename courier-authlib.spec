@@ -1,22 +1,22 @@
 #
 # TODO:
-#	- files
-#	- post, preun
-#	- triggers to allow upgrade from courier,courier-imap,sqwebmail
+#	- tests
 #
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-%define		snap 20041116
-Version:	0.50
-Release:	0.%{snap}.0.1
+Version:	0.55
+Release:	0.5
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.%{snap}.tar.bz2
-# Source0-md5:	d6afed924f2195f55e17082336d679a7
-URL:		http://www.courier-mta.org/
+Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
+# Source0-md5:	eb57aefb8460106709d560c40cccaa41
+Patch0:		%{name}-build.patch
+URL:		http://www.courier-mta.org/authlib/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	db-devel
 BuildRequires:	expect
-BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 BuildRequires:	mysql-devel
 BuildRequires:	openldap-devel
@@ -25,6 +25,10 @@ BuildRequires:	postgresql-devel
 BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post):	/sbin/ldconfig
+Obsoletes:	sqwebmail-auth-cram
+Obsoletes:	sqwebmail-auth-pam
+Obsoletes:	sqwebmail-auth-pwd
+Obsoletes:	sqwebmail-auth-shadow
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -40,6 +44,10 @@ Summary:	Development files for the Courier authentication library
 Summary(pl):	Pliki programistyczne dla biblioteki uwierzytelniania Couriera
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-authldap = %{version}-%{release}
+Requires:	%{name}-authmysql = %{version}-%{release}
+Requires:	%{name}-authpgsql = %{version}-%{release}
+Requires:	%{name}-userdb = %{version}-%{release}
 
 %description devel
 This package contains the development files needed to compile Courier
@@ -56,10 +64,13 @@ i zainstalowaniu ten pakiet mo¿na usun±æ. Pliki z tego pakietu nie s±
 potrzebne w czasie dzia³ania programów.
 
 %package authldap
-Summary:        LDAP support for the Courier authentication library
-Summary(pl):    Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
-Group:          Networking/Daemons
-PreReq:         %{name} = %{version}-%{release}
+Summary:	LDAP support for the Courier authentication library
+Summary(pl):	Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
+Group:		Networking/Daemons
+PreReq:		%{name} = %{version}-%{release}
+Obsoletes:	courier-authldap
+Obsoletes:	courier-imap-authldap
+Obsoletes:	sqwebmail-auth-ldap
 
 %description authldap
 This package installs LDAP support for the Courier authentication
@@ -76,6 +87,9 @@ Summary:	MySQL support for the Courier authentication library
 Summary(pl):	Obs³uga MySQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 PreReq:		%{name} = %{version}-%{release}
+Obsoletes:	courier-authmysql
+Obsoletes:	courier-imap-authmysql
+Obsoletes:	sqwebmail-auth-mysql
 
 %description authmysql
 This package installs MySQL support for the Courier authentication
@@ -92,6 +106,9 @@ Summary:	PostgreSQL support for the Courier authentication library
 Summary(pl):	Obs³uga PostgreSQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 PreReq:		%{name} = %{version}-%{release}
+Obsoletes:	courier-authpgsql
+Obsoletes:	courier-imap-authpgsql
+Obsoletes:	sqwebmail-auth-pgsql
 
 %description authpgsql
 This package installs PostgreSQL support for the Courier
@@ -104,10 +121,12 @@ Couriera. Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem
 PostgreSQL.
 
 %package userdb
-Summary:        Userdb support for the Courier authentication library
-Summary(pl):    Obs³uga userdb dla biblioteki uwierzytelniania Couriera
-Group:          Networking/Daemons
+Summary:	Userdb support for the Courier authentication library
+Summary(pl):	Obs³uga userdb dla biblioteki uwierzytelniania Couriera
+Group:		Networking/Daemons
 PreReq:		%{name} = %{version}-%{release}
+Obsoletes:	courier-imap-userdb
+Obsoletes:	sqwebmail-auth-userdb
 
 %description userdb
 This package installs the userdb support for the Courier
@@ -124,10 +143,20 @@ pocztowymi przy u¿yciu pliku bazy danych opartej na GDBM.
 Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 
 %prep
-%setup -q -n %{name}-%{version}.%{snap}
+%setup -q
+%patch0 -p1
 
 %build
-%configure
+cp /usr/share/automake/config.sub libltdl
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__automake}
+
+%configure \
+	--with-db=db \
+	--with-mailuser=daemon \
+	--with-mailgroup=daemon
 
 %{__make}
 
@@ -137,7 +166,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb}
 
 install courier-authlib.sysvinit $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
 
@@ -152,20 +181,240 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/ldconfig
+/sbin/ldconfig %{_libexecdir}/courier-authlib
 
 /sbin/chkconfig --add courier-authlib
 
-%preun
-if [ -x %{_sbindir}/authdaemond ]; then
-	%{_sbindir}/authdaemond >/dev/null 2>&1 || /bin/true
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+else
+    echo "Run \"/etc/rc.d/init.d/courier-authlib start\" to start authlib daemon"
 fi
 
+%preun
 if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del courier-authlib
 fi
 
-%postun	-p /sbin/ldconfig
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib stop
+fi
+
+%postun
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+
+%post authldap
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun authldap
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%post authmysql
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun authmysql
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%post authpgsql
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun authpgsql
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%post userdb
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun userdb
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%triggerin -- courier < 0.48
+if [ -f /etc/courier/authdaemonrc ]; then
+. /etc/courier/authdaemonrc
+
+sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+fi
+if [ -f /var/lock/subsys/courier ]; then
+    if [ -f /var/spool/courier/authdaemon/pid ]; then
+	kill `cat /var/spool/courier/authdaemon/pid`
+	rm -f /var/spool/courier/authdaemon/*
+	/etc/rc.d/init.d/courier-authlib start
+    fi
+fi
+
+%triggerin -- courier-imap-common < 4.0.0
+if [ -f /etc/courier-imap/authdaemonrc ]; then
+. /etc/courier-imap/authdaemonrc
+
+sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+fi
+if [ -f /var/lock/subsys/courier-imap ]; then
+    if [ -f /var/lib/authdaemon/pid ]; then
+	kill `cat /var/lib/authdaemon/pid`
+	rm -f /var/lib/authdaemon/*
+	/etc/rc.d/init.d/courier-authlib start
+    fi
+fi
+
+%triggerin -- sqwebmail < 5.0.0
+if [ -f /etc/sqwebmail/authdaemonrc ]; then
+. /etc/sqwebmail/authdaemonrc
+
+sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+fi
+if [ -f /var/lock/subsys/sqwebmail ]; then
+    if [ -f /var/spool/sqwebmail/authdaemon/pid ]; then
+	kill `cat /var/spool/sqwebmail/authdaemon/pid`
+	rm -f /var/spool/sqwebmail/authdaemon/*
+	/etc/rc.d/init.d/courier-authlib start
+    fi
+fi
+
+%triggerin -n %{name}-authldap -- courier-authldap < 0.48
+if [ -f /etc/courier/authldaprc ]; then
+    mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
+    mv -f /etc/courier/authldaprc /etc/authlib/authldaprc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-authldap -- courier-imap-authldap < 4.0.0
+if [ -f /etc/courier-imap/authldaprc ]; then
+    mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
+    mv -f /etc/courier-imap/authldaprc /etc/authlib/authldaprc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-authldap -- sqwebmail-auth-ldap < 5.0.0
+if [ -f /etc/sqwebmail/authldaprc ]; then
+    mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
+    mv -f /etc/sqwebmail/authldaprc /etc/authlib/authldaprc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-authmysql -- courier-authmysql < 0.48
+if [ -f /etc/courier/authmysqlrc ]; then
+    mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
+    mv -f /etc/courier/authmysqlrc /etc/authlib/authmysqlrc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-authmysql -- courier-imap-authmysql < 4.0.0
+if [ -f /etc/courier-imap/authmysqlrc ]; then
+    mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
+    mv -f /etc/courier-imap/authmysqlrc /etc/authlib/authmysqlrc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-authmysql -- sqwebmail-auth-mysql < 5.0.0
+if [ -f /etc/sqwebmail/authmysqlrc ]; then
+    mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
+    mv -f /etc/sqwebmail/authmysqlrc /etc/authlib/authmysqlrc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-authpgsql -- courier-authpgsql < 0.48
+if [ -f /etc/courier/authpgsqlrc ]; then
+    mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
+    mv -f /etc/courier/authpgsqlrc /etc/authlib/authpgsqlrc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-authpgsql -- courier-imap-authpgsql < 4.0.0
+if [ -f /etc/courier-imap/authpgsqlrc ]; then
+    mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
+    mv -f /etc/courier-imap/authpgsqlrc /etc/authlib/authpgsqlrc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-authpgsql -- sqwebmail-auth-pgsql < 5.0.0
+if [ -f /etc/sqwebmail/authpgsqlrc ]; then
+    mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
+    mv -f /etc/sqwebmail/authpgsqlrc /etc/authlib/authpgsqlrc
+    if [ -f /var/lock/subsys/courier-authlib ]; then
+	/etc/rc.d/init.d/courier-authlib restart
+    fi
+fi
+
+%triggerin -n %{name}-userdb -- courier < 0.48
+if [ -d /etc/courier/userdb ]; then
+    mv -f /etc/courier/userdb/* /etc/authlib/userdb
+    makeuserdb
+fi
+if [ -f /etc/courier/userdb ]; then
+    mv -f /etc/courier/userdb /etc/authlib/userdb
+    makeuserdb
+fi
+
+%triggerin -n %{name}-userdb -- courier-imap-userdb < 4.0.0
+if [ -d /etc/courier-imap/userdb ]; then
+    mv -f /etc/courier-imap/userdb/* /etc/authlib/userdb
+    makeuserdb
+fi
+if [ -f /etc/courier-imap/userdb ]; then
+    mv -f /etc/courier-imap/userdb /etc/authlib/userdb
+    makeuserdb
+fi
+
+%triggerin -n %{name}-userdb -- sqwebmail-auth-userdb < 5.0.0
+if [ -d /etc/sqwebmail/userdb ]; then
+    mv -f /etc/sqwebmail/userdb/* /etc/authlib/userdb
+    makeuserdb
+fi
+if [ -f /etc/sqwebmail/userdb ]; then
+    mv -f /etc/sqwebmail/userdb /etc/authlib/userdb
+    makeuserdb
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -203,6 +452,7 @@ fi
 %attr(755,root,root) %{_bindir}/courierauthconfig
 %{_includedir}/*
 %{_mandir}/man3/*
+%{_libexecdir}/courier-authlib/*.so
 
 %files authldap
 %defattr(644,root,root,755)
@@ -225,8 +475,11 @@ fi
 
 %files userdb
 %defattr(644,root,root,755)
+%attr(700,root,root) %dir %{_sysconfdir}/authlib/userdb
 %attr(755,root,root) %{_sbindir}/makeuserdb
+%attr(755,root,root) %{_sbindir}/pw2userdb
 %attr(755,root,root) %{_sbindir}/userdb
+%attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_sbindir}/userdbpw
 %attr(755,root,root) %{_sbindir}/vchkpw2userdb
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
