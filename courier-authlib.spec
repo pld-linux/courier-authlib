@@ -1,6 +1,6 @@
 #
 # TODO:
-#	- post, preun
+#	- tests
 #
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
@@ -202,6 +202,54 @@ fi
 
 %postun
 /sbin/ldconfig %{_libexecdir}/courier-authlib
+
+%post authldap
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun authldap
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%post authmysql
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun authmysql
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%post authpgsql
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun authpgsql
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%post userdb
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun userdb
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
 
 %triggerin -- courier < 0.48
 if [ -f /etc/courier/authdaemonrc ]; then
