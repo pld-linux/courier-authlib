@@ -15,6 +15,8 @@ Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 # Source0-md5:	eb57aefb8460106709d560c40cccaa41
 URL:		http://www.courier-mta.org/
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	expect
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
@@ -124,7 +126,7 @@ pocztowymi przy u¿yciu pliku bazy danych opartej na GDBM.
 Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
 
 %build
 cp /usr/share/automake/config.sub .
@@ -158,7 +160,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
-
 /sbin/chkconfig --add courier-authlib
 
 %preun
