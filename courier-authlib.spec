@@ -146,6 +146,7 @@ Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 %patch0 -p1
 
 %build
+cp /usr/share/automake/config.sub libltdl
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
