@@ -166,8 +166,8 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README README*html README.authmysql.myownquery
-%doc NEWS COPYING* AUTHORS ChangeLog authldap.schema
+# COPYING contains only note
+%doc AUTHORS COPYING ChangeLog NEWS README README*html README.authmysql.myownquery authldap.schema
 %dir %{_sysconfdir}/authlib
 %dir %{_libexecdir}/courier-authlib
 %attr(755,root,root) %{_sysconfdir}/rc.d/init.d/courier-authlib
