@@ -422,7 +422,7 @@ fi
 %doc AUTHORS COPYING ChangeLog NEWS README README*html README.authmysql.myownquery authldap.schema
 %dir %{_sysconfdir}/authlib
 %dir %{_libexecdir}/courier-authlib
-%attr(755,root,root) %{_sysconfdir}/rc.d/init.d/courier-authlib
+%attr(754,root,root) /etc/rc.d/init.d/courier-authlib
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authdaemonrc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authdaemond
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authsystem.passwd
