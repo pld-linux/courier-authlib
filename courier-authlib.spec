@@ -24,6 +24,10 @@ BuildRequires:	postgresql-devel
 BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post):	/sbin/ldconfig
+Obsoletes:	sqwebmail-auth-cram
+Obsoletes:	sqwebmail-auth-pam
+Obsoletes:	sqwebmail-auth-pwd
+Obsoletes:	sqwebmail-auth-shadow
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -59,6 +63,9 @@ Summary:        LDAP support for the Courier authentication library
 Summary(pl):    Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
 Group:          Networking/Daemons
 PreReq:         %{name} = %{version}-%{release}
+Obsoletes:	courier-authldap
+Obsoletes:	courier-imap-authldap
+Obsoletes:	sqwebmail-auth-ldap
 
 %description authldap
 This package installs LDAP support for the Courier authentication
@@ -75,6 +82,9 @@ Summary:	MySQL support for the Courier authentication library
 Summary(pl):	Obs³uga MySQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 PreReq:		%{name} = %{version}-%{release}
+Obsoletes:	courier-authmysql
+Obsoletes:	courier-imap-authmysql
+Obsoletes:	sqwebmail-auth-mysql
 
 %description authmysql
 This package installs MySQL support for the Courier authentication
@@ -91,6 +101,9 @@ Summary:	PostgreSQL support for the Courier authentication library
 Summary(pl):	Obs³uga PostgreSQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 PreReq:		%{name} = %{version}-%{release}
+Obsoletes:	courier-authpgsql
+Obsoletes:	courier-imap-authpgsql
+Obsoletes:	sqwebmail-auth-pgsql
 
 %description authpgsql
 This package installs PostgreSQL support for the Courier
@@ -107,6 +120,8 @@ Summary:        Userdb support for the Courier authentication library
 Summary(pl):    Obs³uga userdb dla biblioteki uwierzytelniania Couriera
 Group:          Networking/Daemons
 PreReq:		%{name} = %{version}-%{release}
+Obsoletes:	courier-imap-userdb
+Obsoletes:	sqwebmail-auth-userdb
 
 %description userdb
 This package installs the userdb support for the Courier
@@ -165,6 +180,20 @@ if [ "$1" = "0" ]; then
 fi
 
 %postun	-p /sbin/ldconfig
+
+%post authldap
+if ps -A |grep -q authdaemond.lda; then
+        %{_libexecdir}/courier-authlib/authdaemond stop
+        %{_libexecdir}/courier-authlib/authdaemond start
+fi
+
+%postun authldap
+if [ -x %{_libexecdir}/courier-authlib/authdaemond ]; then
+        if ps -A |grep -q authdaemond.lda; then
+                %{_libexecdir}/courier-authlib/authdaemond stop;
+                %{_libexecdir}/courier-authlib/authdaemond start;
+        fi
+fi
 
 %files
 %defattr(644,root,root,755)
