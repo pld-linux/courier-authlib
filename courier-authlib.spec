@@ -13,7 +13,7 @@ Version:	0.50
 Release:	0.%{snap}.0.1
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://www.courier-mta.org/beta/courier/%{name}-%{version}.%{snap}.tar.bz2
+Source0:	http://www.courier-mta.org/beta/%{name}/%{name}-%{version}.%{snap}.tar.bz2
 # Source0-md5:	d6afed924f2195f55e17082336d679a7
 URL:		http://www.courier-mta.org
 Requires(post,preun):	/sbin/chkconfig
