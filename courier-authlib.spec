@@ -1,21 +1,22 @@
 #
 # TODO:
 #	- post, preun
-#	- triggers to allow upgrade from courier,courier-imap,sqwebmail
 #
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.55
-Release:	0.1
+Release:	0.5
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 # Source0-md5:	eb57aefb8460106709d560c40cccaa41
 Patch0:		%{name}-build.patch
 URL:		http://www.courier-mta.org/authlib/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	db-devel
 BuildRequires:	expect
-BuildRequires:	gdbm-devel
 BuildRequires:	libtool
 BuildRequires:	mysql-devel
 BuildRequires:	openldap-devel
@@ -153,6 +154,7 @@ cp /usr/share/automake/config.sub libltdl
 %{__automake}
 
 %configure \
+	--with-db=db \
 	--with-mailuser=daemon \
 	--with-mailgroup=daemon
 
@@ -187,7 +189,7 @@ if [ -f /var/lock/subsys/courier-authlib ]; then
     /etc/rc.d/init.d/courier-authlib restart
 else
     echo "Run \"/etc/rc.d/init.d/courier-authlib start\" to start authlib daemon"
-fi    
+fi
 
 %preun
 if [ "$1" = "0" ]; then
@@ -425,7 +427,7 @@ fi
 
 %files userdb
 %defattr(644,root,root,755)
-%dir %{_sysconfdir}/authlib/userdb
+%attr(700,root,root) %dir %{_sysconfdir}/authlib/userdb
 %attr(755,root,root) %{_sbindir}/makeuserdb
 %attr(755,root,root) %{_sbindir}/pw2userdb
 %attr(755,root,root) %{_sbindir}/userdb
