@@ -8,12 +8,12 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 %define		snap 20041116
-Version:	0.50
-Release:	0.%{snap}.0.1
+Version:	0.55
+Release:	0.1
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.%{snap}.tar.bz2
-# Source0-md5:	d6afed924f2195f55e17082336d679a7
+Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
+# Source0-md5:	eb57aefb8460106709d560c40cccaa41
 URL:		http://www.courier-mta.org/
 BuildRequires:	expect
 BuildRequires:	gdbm-devel
@@ -124,9 +124,14 @@ pocztowymi przy u¿yciu pliku bazy danych opartej na GDBM.
 Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 
 %prep
-%setup -q -n %{name}-%{version}.%{snap}
+%setup -q -n %{name}-%{version}
 
 %build
+cp /usr/share/automake/config.sub .
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
 %configure
 
 %{__make}
