@@ -1,19 +1,18 @@
 #
 # TODO:
-#	- files
 #	- post, preun
 #	- triggers to allow upgrade from courier,courier-imap,sqwebmail
 #
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-%define		snap 20041116
+%define		snap 20041203
 Version:	0.50
 Release:	0.%{snap}.0.1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.%{snap}.tar.bz2
-# Source0-md5:	d6afed924f2195f55e17082336d679a7
+# Source0-md5:	ba73facbd811883feaf63b909e808a1b
 URL:		http://www.courier-mta.org/
 BuildRequires:	expect
 BuildRequires:	gdbm-devel
@@ -227,6 +226,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sbindir}/makeuserdb
 %attr(755,root,root) %{_sbindir}/userdb
+%attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_sbindir}/userdbpw
 %attr(755,root,root) %{_sbindir}/vchkpw2userdb
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
