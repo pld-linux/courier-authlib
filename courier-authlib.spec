@@ -6,12 +6,12 @@
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.51
-Release:	0.2
+Version:	0.55
+Release:	0.1
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.tar.bz2
-# Source0-md5:	89cb2db63b3f6d402e435331e391ef80
+Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
+# Source0-md5:	eb57aefb8460106709d560c40cccaa41
 Patch0:		%{name}-build.patch
 URL:		http://www.courier-mta.org/
 BuildRequires:	expect
@@ -333,6 +333,16 @@ if [ -f /etc/sqwebmail/authpgsqlrc ]; then
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
+fi
+
+%triggerin -n %{name}-userdb -- courier < 0.48
+if [ -d /etc/courier/userdb ]; then
+    mv -f /etc/courier/userdb/* /etc/authlib/userdb
+    makeuserdb
+fi
+if [ -f /etc/courier/userdb ]; then
+    mv -f /etc/courier/userdb /etc/authlib/userdb
+    makeuserdb
 fi
 
 %triggerin -n %{name}-userdb -- courier-imap-userdb < 4.0.0
