@@ -8,15 +8,13 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 %define		snap 20041116
-Version:	0.55
-Release:	0.1
+Version:	0.50
+Release:	0.%{snap}.0.1
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	eb57aefb8460106709d560c40cccaa41
+Source0:	http://www.courier-mta.org/beta/courier-authlib/%{name}-%{version}.%{snap}.tar.bz2
+# Source0-md5:	d6afed924f2195f55e17082336d679a7
 URL:		http://www.courier-mta.org/
-BuildRequires:	autoconf
-BuildRequires:	automake
 BuildRequires:	expect
 BuildRequires:	gdbm-devel
 BuildRequires:	libtool
@@ -126,15 +124,9 @@ pocztowymi przy u¿yciu pliku bazy danych opartej na GDBM.
 Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}.%{snap}
 
 %build
-cp -f /usr/share/automake/config.sub libltdl
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-%{__autoheader}
-%{__automake}
 %configure
 
 %{__make}
@@ -161,6 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
+
 /sbin/chkconfig --add courier-authlib
 
 %preun
@@ -236,9 +229,6 @@ fi
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdbpw
 %attr(755,root,root) %{_sbindir}/vchkpw2userdb
-%attr(755,root,root) %{_sbindir}/pw2userdb
-%attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
-
 %{_libexecdir}/courier-authlib/libauthuserdb.la
 %{_mandir}/man8/*userdb*
