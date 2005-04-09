@@ -1,12 +1,8 @@
-#
-# TODO:
-#	- tests
-#
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.55
-Release:	1
+Release:	2
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -308,7 +304,7 @@ fi
 %triggerin -n %{name}-authldap -- courier-authldap < 0.48
 if [ -f /etc/courier/authldaprc ]; then
     mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
-    mv -f /etc/courier/authldaprc /etc/authlib/authldaprc
+    cp -f /etc/courier/authldaprc /etc/authlib/authldaprc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
@@ -317,7 +313,7 @@ fi
 %triggerin -n %{name}-authldap -- courier-imap-authldap < 4.0.0
 if [ -f /etc/courier-imap/authldaprc ]; then
     mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
-    mv -f /etc/courier-imap/authldaprc /etc/authlib/authldaprc
+    cp -f /etc/courier-imap/authldaprc /etc/authlib/authldaprc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
@@ -326,7 +322,7 @@ fi
 %triggerin -n %{name}-authldap -- sqwebmail-auth-ldap < 5.0.0
 if [ -f /etc/sqwebmail/authldaprc ]; then
     mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
-    mv -f /etc/sqwebmail/authldaprc /etc/authlib/authldaprc
+    cp -f /etc/sqwebmail/authldaprc /etc/authlib/authldaprc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
@@ -335,7 +331,7 @@ fi
 %triggerin -n %{name}-authmysql -- courier-authmysql < 0.48
 if [ -f /etc/courier/authmysqlrc ]; then
     mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
-    mv -f /etc/courier/authmysqlrc /etc/authlib/authmysqlrc
+    cp -f /etc/courier/authmysqlrc /etc/authlib/authmysqlrc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
@@ -344,7 +340,7 @@ fi
 %triggerin -n %{name}-authmysql -- courier-imap-authmysql < 4.0.0
 if [ -f /etc/courier-imap/authmysqlrc ]; then
     mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
-    mv -f /etc/courier-imap/authmysqlrc /etc/authlib/authmysqlrc
+    cp -f /etc/courier-imap/authmysqlrc /etc/authlib/authmysqlrc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
@@ -353,7 +349,7 @@ fi
 %triggerin -n %{name}-authmysql -- sqwebmail-auth-mysql < 5.0.0
 if [ -f /etc/sqwebmail/authmysqlrc ]; then
     mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
-    mv -f /etc/sqwebmail/authmysqlrc /etc/authlib/authmysqlrc
+    cp -f /etc/sqwebmail/authmysqlrc /etc/authlib/authmysqlrc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
@@ -362,7 +358,7 @@ fi
 %triggerin -n %{name}-authpgsql -- courier-authpgsql < 0.48
 if [ -f /etc/courier/authpgsqlrc ]; then
     mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
-    mv -f /etc/courier/authpgsqlrc /etc/authlib/authpgsqlrc
+    cp -f /etc/courier/authpgsqlrc /etc/authlib/authpgsqlrc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
@@ -371,7 +367,7 @@ fi
 %triggerin -n %{name}-authpgsql -- courier-imap-authpgsql < 4.0.0
 if [ -f /etc/courier-imap/authpgsqlrc ]; then
     mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
-    mv -f /etc/courier-imap/authpgsqlrc /etc/authlib/authpgsqlrc
+    cp -f /etc/courier-imap/authpgsqlrc /etc/authlib/authpgsqlrc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
@@ -380,7 +376,7 @@ fi
 %triggerin -n %{name}-authpgsql -- sqwebmail-auth-pgsql < 5.0.0
 if [ -f /etc/sqwebmail/authpgsqlrc ]; then
     mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
-    mv -f /etc/sqwebmail/authpgsqlrc /etc/authlib/authpgsqlrc
+    cp -f /etc/sqwebmail/authpgsqlrc /etc/authlib/authpgsqlrc
     if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
     fi
