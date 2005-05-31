@@ -18,6 +18,7 @@ BuildRequires:	mysql-devel
 BuildRequires:	openldap-devel
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
+BuildRequires:	sysconftool
 BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
 Requires(post):	/sbin/ldconfig
