@@ -1,12 +1,12 @@
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.55
-Release:	2
+Version:	0.56
+Release:	1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	eb57aefb8460106709d560c40cccaa41
+# Source0-md5:	d4348a3add731fadd1c3c445aa8c904a
 Patch0:		%{name}-build.patch
 URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	autoconf
@@ -420,18 +420,20 @@ fi
 %dir %{_sysconfdir}/authlib
 %dir %{_libexecdir}/courier-authlib
 %attr(754,root,root) /etc/rc.d/init.d/courier-authlib
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authdaemonrc
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authdaemonrc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authdaemond
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authsystem.passwd
 %attr(755,root,root) %{_libexecdir}/courier-authlib/makedatprog
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthcustom.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpam.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauth.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthcommon.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsasl.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthcustom.la
 %{_libexecdir}/courier-authlib/libauthpam.la
+%{_libexecdir}/courier-authlib/libauthpipe.la
 %{_libexecdir}/courier-authlib/libcourierauth.la
 %{_libexecdir}/courier-authlib/libcourierauthcommon.la
 %{_libexecdir}/courier-authlib/libcourierauthsasl.la
@@ -454,19 +456,19 @@ fi
 %files authldap
 %defattr(644,root,root,755)
 %doc authldap.schema README.ldap
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authldaprc
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authldaprc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthldap.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthldap.la
 
 %files authmysql
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authmysqlrc
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authmysqlrc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthmysql.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthmysql.la
 
 %files authpgsql
 %defattr(644,root,root,755)
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/authlib/authpgsqlrc
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authpgsqlrc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpgsql.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthpgsql.la
 
