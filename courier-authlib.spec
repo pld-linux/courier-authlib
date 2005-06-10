@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.56
-Release:	1
+Release:	2
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -139,6 +139,22 @@ pocztowymi przy u¿yciu pliku bazy danych opartej na GDBM.
 
 Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 
+%package pipe
+Summary:	External authentication module that communicates via pipes
+Summary(pl):	Zewnêtrzny modu³ autentyfikacyjny komunikuj±cy siê przez pipe
+Group:		Networking/Daemons
+PreReq:		%{name} = %{version}-%{release}
+
+%description pipe
+This package installs the authpipe module, which is a generic plugin
+that enables authentication requests to be serviced by an external
+program, then communicates through messages on stdin and stdout.
+
+%description pipe -l pl
+Pakiet ten instaluje modu³ authpipe, który jest ogóln± wtyczk±
+umo¿liwiaj±c± obs³ugê ¿±dañ autentyfikacji przez zewnêtrzny program
+komunikuj±cy siê poprzez wiadomo¶ci wysy³ane na stdin i stdout.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -243,6 +259,18 @@ if [ -f /var/lock/subsys/courier-authlib ]; then
 fi
 
 %postun userdb
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%post pipe
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+if [ -f /var/lock/subsys/courier-authlib ]; then
+    /etc/rc.d/init.d/courier-authlib restart
+fi
+
+%postun pipe
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
     /etc/rc.d/init.d/courier-authlib restart
@@ -426,14 +454,12 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/makedatprog
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthcustom.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpam.so.*.*.*
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauth.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthcommon.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsasl.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthcustom.la
 %{_libexecdir}/courier-authlib/libauthpam.la
-%{_libexecdir}/courier-authlib/libauthpipe.la
 %{_libexecdir}/courier-authlib/libcourierauth.la
 %{_libexecdir}/courier-authlib/libcourierauthcommon.la
 %{_libexecdir}/courier-authlib/libcourierauthsasl.la
@@ -484,3 +510,8 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthuserdb.la
 %{_mandir}/man8/*userdb*
+
+%files pipe
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so.*.*.*
+%{_libexecdir}/courier-authlib/libauthpipe.la
