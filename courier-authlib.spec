@@ -141,7 +141,7 @@ Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 
 %package pipe
 Summary:	External authentication module that communicates via pipes
-Summary(pl):	Zewnêtrzny modu³ autentyfikacyjny komunikuj±cy siê przez pipe
+Summary(pl):	Zewnêtrzny modu³ uwierzytelniaj±cy komunikuj±cy siê przez potoki
 Group:		Networking/Daemons
 PreReq:		%{name} = %{version}-%{release}
 
@@ -152,7 +152,7 @@ program, then communicates through messages on stdin and stdout.
 
 %description pipe -l pl
 Pakiet ten instaluje modu³ authpipe, który jest ogóln± wtyczk±
-umo¿liwiaj±c± obs³ugê ¿±dañ autentyfikacji przez zewnêtrzny program
+umo¿liwiaj±c± obs³ugê ¿±dañ uwierzytelnienia przez zewnêtrzny program
 komunikuj±cy siê poprzez wiadomo¶ci wysy³ane na stdin i stdout.
 
 %prep
