@@ -8,6 +8,7 @@ Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 # Source0-md5:	d4348a3add731fadd1c3c445aa8c904a
 Patch0:		%{name}-build.patch
+Patch1:		%{name}-md5sum-passwords.patch
 URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -158,6 +159,7 @@ komunikuj±cy siê poprzez wiadomo¶ci wysy³ane na stdin i stdout.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 cp /usr/share/automake/config.sub libltdl
