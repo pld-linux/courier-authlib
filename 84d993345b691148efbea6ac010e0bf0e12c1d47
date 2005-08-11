@@ -1,0 +1,2 @@
+- use db instead of gdbm
+- %files fixes, BR: am,ac; rel. 0.5
