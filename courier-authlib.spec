@@ -1,12 +1,12 @@
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.56
-Release:	2
+Version:	0.57
+Release:	1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	d4348a3add731fadd1c3c445aa8c904a
+# Source0-md5:	af146ac84f0c3ee00006af50b4415d8a
 Patch0:		%{name}-build.patch
 Patch1:		%{name}-md5sum-passwords.patch
 URL:		http://www.courier-mta.org/authlib/
@@ -164,9 +164,24 @@ komunikuj±cy siê poprzez wiadomo¶ci wysy³ane na stdin i stdout.
 %build
 cp /usr/share/automake/config.sub libltdl
 %{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-%{__automake}
+
+# Change Makefile.am files and force recreate Makefile.in's.
+OLDDIR=`pwd`
+find -type f -a \( -name configure.in -o -name configure.ac \) | while read FILE; do
+    cd "`dirname "$FILE"`"
+    
+    if [ -f Makefile.am ]; then
+	grep -v '_LDFLAGS=-static' Makefile.am > Makefile.am.tmp
+	mv Makefile.am.tmp Makefile.am
+    fi
+
+    %{__aclocal}
+    %{__autoconf}
+    %{__autoheader}
+    %{__automake}
+    
+    cd "$OLDDIR"
+done
 
 %configure \
 	--with-db=db \
