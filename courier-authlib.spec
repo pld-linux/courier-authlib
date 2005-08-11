@@ -19,6 +19,7 @@ BuildRequires:	mysql-devel
 BuildRequires:	openldap-devel
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
+BuildRequires:	sed >= 4.0
 BuildRequires:	sysconftool
 BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
@@ -168,19 +169,18 @@ cp /usr/share/automake/config.sub libltdl
 # Change Makefile.am files and force recreate Makefile.in's.
 OLDDIR=`pwd`
 find -type f -a \( -name configure.in -o -name configure.ac \) | while read FILE; do
-    cd "`dirname "$FILE"`"
-    
-    if [ -f Makefile.am ]; then
-	grep -v '_LDFLAGS=-static' Makefile.am > Makefile.am.tmp
-	mv Makefile.am.tmp Makefile.am
-    fi
+	cd "`dirname "$FILE"`"
 
-    %{__aclocal}
-    %{__autoconf}
-    %{__autoheader}
-    %{__automake}
-    
-    cd "$OLDDIR"
+	if [ -f Makefile.am ]; then
+		sed -i -e '/_LDFLAGS=-static/d' Makefile.am
+	fi
+
+	%{__aclocal}
+	%{__autoconf}
+	%{__autoheader}
+	%{__automake}
+
+	cd "$OLDDIR"
 done
 
 %configure \
@@ -216,9 +216,9 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/chkconfig --add courier-authlib
 
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 else
-    echo "Run \"/etc/rc.d/init.d/courier-authlib start\" to start authlib daemon"
+	echo "Run \"/etc/rc.d/init.d/courier-authlib start\" to start authlib daemon"
 fi
 
 %preun
@@ -227,7 +227,7 @@ if [ "$1" = "0" ]; then
 fi
 
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib stop
+	/etc/rc.d/init.d/courier-authlib stop
 fi
 
 %postun
@@ -236,226 +236,226 @@ fi
 %post authldap
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun authldap
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %post authmysql
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun authmysql
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %post authpgsql
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun authpgsql
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %post userdb
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun userdb
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %post pipe
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun pipe
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
-    /etc/rc.d/init.d/courier-authlib restart
+	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %triggerin -- courier < 0.48
 if [ -f /etc/courier/authdaemonrc ]; then
-. /etc/courier/authdaemonrc
+	. /etc/courier/authdaemonrc
 
-sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
-    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
-    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+	sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+	sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+	sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
 fi
 if [ -f /var/lock/subsys/courier ]; then
-    if [ -f /var/spool/courier/authdaemon/pid ]; then
-	kill `cat /var/spool/courier/authdaemon/pid`
-	rm -f /var/spool/courier/authdaemon/*
-	/etc/rc.d/init.d/courier-authlib start
-    fi
+	if [ -f /var/spool/courier/authdaemon/pid ]; then
+		kill `cat /var/spool/courier/authdaemon/pid`
+		rm -f /var/spool/courier/authdaemon/*
+		/etc/rc.d/init.d/courier-authlib start
+	fi
 fi
 
 %triggerin -- courier-imap-common < 4.0.0
 if [ -f /etc/courier-imap/authdaemonrc ]; then
-. /etc/courier-imap/authdaemonrc
+	. /etc/courier-imap/authdaemonrc
 
-sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
-    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
-    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+	sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+	sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+	sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
 fi
 if [ -f /var/lock/subsys/courier-imap ]; then
-    if [ -f /var/lib/authdaemon/pid ]; then
-	kill `cat /var/lib/authdaemon/pid`
-	rm -f /var/lib/authdaemon/*
-	/etc/rc.d/init.d/courier-authlib start
-    fi
+	if [ -f /var/lib/authdaemon/pid ]; then
+		kill `cat /var/lib/authdaemon/pid`
+		rm -f /var/lib/authdaemon/*
+		/etc/rc.d/init.d/courier-authlib start
+	fi
 fi
 
 %triggerin -- sqwebmail < 5.0.0
 if [ -f /etc/sqwebmail/authdaemonrc ]; then
-. /etc/sqwebmail/authdaemonrc
+	. /etc/sqwebmail/authdaemonrc
 
-sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
-    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
-    | sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+	sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+	sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
+	sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
 fi
 if [ -f /var/lock/subsys/sqwebmail ]; then
-    if [ -f /var/spool/sqwebmail/authdaemon/pid ]; then
-	kill `cat /var/spool/sqwebmail/authdaemon/pid`
-	rm -f /var/spool/sqwebmail/authdaemon/*
-	/etc/rc.d/init.d/courier-authlib start
-    fi
+	if [ -f /var/spool/sqwebmail/authdaemon/pid ]; then
+		kill `cat /var/spool/sqwebmail/authdaemon/pid`
+		rm -f /var/spool/sqwebmail/authdaemon/*
+		/etc/rc.d/init.d/courier-authlib start
+	fi
 fi
 
 %triggerin -n %{name}-authldap -- courier-authldap < 0.48
 if [ -f /etc/courier/authldaprc ]; then
-    mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
-    cp -f /etc/courier/authldaprc /etc/authlib/authldaprc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
+	cp -f /etc/courier/authldaprc /etc/authlib/authldaprc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-authldap -- courier-imap-authldap < 4.0.0
 if [ -f /etc/courier-imap/authldaprc ]; then
-    mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
-    cp -f /etc/courier-imap/authldaprc /etc/authlib/authldaprc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
+	cp -f /etc/courier-imap/authldaprc /etc/authlib/authldaprc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-authldap -- sqwebmail-auth-ldap < 5.0.0
 if [ -f /etc/sqwebmail/authldaprc ]; then
-    mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
-    cp -f /etc/sqwebmail/authldaprc /etc/authlib/authldaprc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authldaprc /etc/authlib/authldaprc.new
+	cp -f /etc/sqwebmail/authldaprc /etc/authlib/authldaprc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-authmysql -- courier-authmysql < 0.48
 if [ -f /etc/courier/authmysqlrc ]; then
-    mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
-    cp -f /etc/courier/authmysqlrc /etc/authlib/authmysqlrc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
+	cp -f /etc/courier/authmysqlrc /etc/authlib/authmysqlrc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-authmysql -- courier-imap-authmysql < 4.0.0
 if [ -f /etc/courier-imap/authmysqlrc ]; then
-    mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
-    cp -f /etc/courier-imap/authmysqlrc /etc/authlib/authmysqlrc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
+	cp -f /etc/courier-imap/authmysqlrc /etc/authlib/authmysqlrc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-authmysql -- sqwebmail-auth-mysql < 5.0.0
 if [ -f /etc/sqwebmail/authmysqlrc ]; then
-    mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
-    cp -f /etc/sqwebmail/authmysqlrc /etc/authlib/authmysqlrc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authmysqlrc /etc/authlib/authmysqlrc.new
+	cp -f /etc/sqwebmail/authmysqlrc /etc/authlib/authmysqlrc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-authpgsql -- courier-authpgsql < 0.48
 if [ -f /etc/courier/authpgsqlrc ]; then
-    mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
-    cp -f /etc/courier/authpgsqlrc /etc/authlib/authpgsqlrc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
+	cp -f /etc/courier/authpgsqlrc /etc/authlib/authpgsqlrc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-authpgsql -- courier-imap-authpgsql < 4.0.0
 if [ -f /etc/courier-imap/authpgsqlrc ]; then
-    mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
-    cp -f /etc/courier-imap/authpgsqlrc /etc/authlib/authpgsqlrc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
+	cp -f /etc/courier-imap/authpgsqlrc /etc/authlib/authpgsqlrc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-authpgsql -- sqwebmail-auth-pgsql < 5.0.0
 if [ -f /etc/sqwebmail/authpgsqlrc ]; then
-    mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
-    cp -f /etc/sqwebmail/authpgsqlrc /etc/authlib/authpgsqlrc
-    if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib restart
-    fi
+	mv -f /etc/authlib/authpgsqlrc /etc/authlib/authpgsqlrc.new
+	cp -f /etc/sqwebmail/authpgsqlrc /etc/authlib/authpgsqlrc
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib restart
+	fi
 fi
 
 %triggerin -n %{name}-userdb -- courier < 0.48
 if [ -d /etc/courier/userdb ]; then
-    mv -f /etc/courier/userdb/* /etc/authlib/userdb
-    makeuserdb
+	mv -f /etc/courier/userdb/* /etc/authlib/userdb
+	makeuserdb
 fi
 if [ -f /etc/courier/userdb ]; then
-    mv -f /etc/courier/userdb /etc/authlib/userdb
-    makeuserdb
+	mv -f /etc/courier/userdb /etc/authlib/userdb
+	makeuserdb
 fi
 
 %triggerin -n %{name}-userdb -- courier-imap-userdb < 4.0.0
 if [ -d /etc/courier-imap/userdb ]; then
-    mv -f /etc/courier-imap/userdb/* /etc/authlib/userdb
-    makeuserdb
+	mv -f /etc/courier-imap/userdb/* /etc/authlib/userdb
+	makeuserdb
 fi
 if [ -f /etc/courier-imap/userdb ]; then
-    mv -f /etc/courier-imap/userdb /etc/authlib/userdb
-    makeuserdb
+	mv -f /etc/courier-imap/userdb /etc/authlib/userdb
+	makeuserdb
 fi
 
 %triggerin -n %{name}-userdb -- sqwebmail-auth-userdb < 5.0.0
 if [ -d /etc/sqwebmail/userdb ]; then
-    mv -f /etc/sqwebmail/userdb/* /etc/authlib/userdb
-    makeuserdb
+	mv -f /etc/sqwebmail/userdb/* /etc/authlib/userdb
+	makeuserdb
 fi
 if [ -f /etc/sqwebmail/userdb ]; then
-    mv -f /etc/sqwebmail/userdb /etc/authlib/userdb
-    makeuserdb
+	mv -f /etc/sqwebmail/userdb /etc/authlib/userdb
+	makeuserdb
 fi
 
 %files
