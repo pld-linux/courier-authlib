@@ -1,0 +1,2 @@
+- %files fixes
+- add ldconfig to post,postun
