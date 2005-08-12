@@ -484,6 +484,7 @@ fi
 %attr(770,root,daemon) %dir %{_localstatedir}/spool/authdaemon
 %attr(755,root,root) %{_sbindir}/authdaemond
 %attr(755,root,root) %{_sbindir}/authenumerate
+%attr(755,root,root) %{_sbindir}/authpasswd
 %attr(755,root,root) %{_sbindir}/authtest
 %attr(755,root,root) %{_sbindir}/courierlogger
 %{_mandir}/man1/*
