@@ -7,6 +7,7 @@ License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 # Source0-md5:	af146ac84f0c3ee00006af50b4415d8a
+Source1:	%{name}.init
 Patch0:		%{name}-build.patch
 Patch1:		%{name}-md5sum-passwords.patch
 URL:		http://www.courier-mta.org/authlib/
@@ -198,7 +199,7 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb}
 
-install courier-authlib.sysvinit $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
 
 # make config files
 ./sysconftool $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
