@@ -33,7 +33,7 @@ case "$1" in
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/courier-authlib ]; then
 		msg_starting courier-authlib
-		daemon /usr/sbin/authdaemond
+		daemon /usr/sbin/authdaemond start
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/courier-authlib
 	else
@@ -44,7 +44,7 @@ case "$1" in
 	# Stop daemons.
 	if [ -f /var/lock/subsys/courier-authlib ]; then
 		msg_stopping courier-authlib
-		killproc authdaemond
+		daemon /usr/sbin/authdaemond stop
 		rm -f /var/lock/subsys/courier-authlib >/dev/null 2>&1
 	else
 		msg_not_running courier-authlib
@@ -61,7 +61,7 @@ case "$1" in
   reload|force-reload|graceful)
 	if [ -f /var/lock/subsys/courier-authlib ]; then
 		msg_reloading courier-authlib
-		killproc authdaemond -HUP
+		daemon /usr/sbin/authdaemond restart
 		RETVAL=$?
 	else
 		msg_not_running courier-authlib
