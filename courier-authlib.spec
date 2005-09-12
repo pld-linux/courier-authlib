@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.57
-Release:	1
+Release:	1.3
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -30,6 +30,8 @@ Obsoletes:	sqwebmail-auth-pam
 Obsoletes:	sqwebmail-auth-pwd
 Obsoletes:	sqwebmail-auth-shadow
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		schemadir	/usr/share/openldap/schema
 
 %description
 The Courier authentication library provides authentication services
@@ -158,6 +160,15 @@ Pakiet ten instaluje modu³ authpipe, który jest ogóln± wtyczk±
 umo¿liwiaj±c± obs³ugê ¿±dañ uwierzytelnienia przez zewnêtrzny program
 komunikuj±cy siê poprzez wiadomo¶ci wysy³ane na stdin i stdout.
 
+%package -n openldap-schema-courier
+Summary:	Courier LDAP schema
+Group:		Networking/Daemons
+Requires(post,postun):	sed >= 4.0
+Requires:	openldap-servers
+
+%description -n openldap-schema-courier
+This package contains Courier authldap.schema for openldap.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -197,9 +208,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb}
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb,%{schemadir}}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
+install authldap.schema $RPM_BUILD_ROOT%{schemadir}/courier.schema
 
 # make config files
 ./sysconftool $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
@@ -292,6 +304,41 @@ fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
+fi
+
+%post -n openldap-schema-courier
+if ! grep -q %{schemadir}/courier.schema /etc/openldap/slapd.conf; then
+	sed -i -e '
+		/^include.*local.schema/{
+			i\
+include		%{schemadir}/courier.schema
+		}
+
+		# enable dependant schemas: nis.schema
+		/^#include.*\(nis\)\.schema/{
+			s/^#//
+		}
+	' /etc/openldap/slapd.conf
+fi
+
+if [ -f /var/lock/subsys/ldap ]; then
+	/etc/rc.d/init.d/ldap restart >&2
+fi
+
+%postun -n openldap-schema-courier
+if [ "$1" = "0" ]; then
+	if grep -q %{schemadir}/courier.schema /etc/openldap/slapd.conf; then
+		sed -i -e '
+		/^include.*\/usr\/share\/openldap\/schema\/courier.schema/d
+
+		# for symmetry it would be nice if we disable enabled schemas in post,
+		# but we really can not do that, it would break something else.
+		' /etc/openldap/slapd.conf
+	fi
+
+	if [ -f /var/lock/subsys/ldap ]; then
+		/etc/rc.d/init.d/ldap restart >&2 || :
+	fi
 fi
 
 %triggerin -- courier < 0.48
@@ -534,3 +581,7 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthpipe.la
+
+%files -n openldap-schema-courier
+%defattr(644,root,root,755)
+%{schemadir}/*.schema
