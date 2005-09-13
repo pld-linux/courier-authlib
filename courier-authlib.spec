@@ -162,12 +162,16 @@ komunikuj±cy siê poprzez wiadomo¶ci wysy³ane na stdin i stdout.
 
 %package -n openldap-schema-courier
 Summary:	Courier LDAP schema
+Summary(pl):	Schemat LDAP Couriera
 Group:		Networking/Daemons
 Requires(post,postun):	sed >= 4.0
 Requires:	openldap-servers
 
 %description -n openldap-schema-courier
 This package contains Courier authldap.schema for openldap.
+
+%description -n openldap-schema-courier -l pl
+Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 
 %prep
 %setup -q
