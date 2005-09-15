@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.57
-Release:	1.4
+Release:	1.5
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -319,8 +319,8 @@ if ! grep -q %{schemadir}/courier.schema /etc/openldap/slapd.conf; then
 include		%{schemadir}/courier.schema
 		}
 
-		# enable dependant schemas: nis.schema
-		/^#include.*\(nis\)\.schema/{
+		# enable dependant schemas: nis.schema, cosine.schema
+		/^#include.*\(nis\|cosine\)\.schema/{
 			s/^#//
 		}
 	' /etc/openldap/slapd.conf
