@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.57
-Release:	1.3
+Release:	1.4
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -165,6 +165,7 @@ Summary:	Courier LDAP schema
 Summary(pl):	Schemat LDAP Couriera
 Group:		Networking/Daemons
 Requires(post,postun):	sed >= 4.0
+Requires:	sed >= 4.0
 Requires:	openldap-servers
 
 %description -n openldap-schema-courier
