@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.57
-Release:	2.7
+Release:	2.9
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -17,6 +17,7 @@ BuildRequires:	automake
 BuildRequires:	db-devel
 BuildRequires:	expect
 BuildRequires:	libtool
+BuildRequires:	libltdl-devel
 BuildRequires:	mysql-devel
 BuildRequires:	openldap-devel
 BuildRequires:	pam-devel
@@ -24,6 +25,8 @@ BuildRequires:	postgresql-devel
 BuildRequires:	sed >= 4.0
 BuildRequires:	sysconftool
 BuildRequires:	zlib-devel
+Requires:	rc-scripts
+Requires:	/sbin/chkconfig
 Requires(post,preun):	/sbin/chkconfig
 Requires(post):	/sbin/ldconfig
 Obsoletes:	sqwebmail-auth-cram
