@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.57
-Release:	2
+Release:	2.7
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -10,6 +10,7 @@ Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 Source1:	%{name}.init
 Patch0:		%{name}-build.patch
 Patch1:		%{name}-md5sum-passwords.patch
+Patch2:		%{name}-authdaemonrc.patch
 URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -70,6 +71,7 @@ Summary:	LDAP support for the Courier authentication library
 Summary(pl):	Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
+Requires(pre,postun):	sed >= 4.0
 Obsoletes:	courier-authldap
 Obsoletes:	courier-imap-authldap
 Obsoletes:	sqwebmail-auth-ldap
@@ -89,6 +91,7 @@ Summary:	MySQL support for the Courier authentication library
 Summary(pl):	Obs³uga MySQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
+Requires(pre,postun):	sed >= 4.0
 Obsoletes:	courier-authmysql
 Obsoletes:	courier-imap-authmysql
 Obsoletes:	sqwebmail-auth-mysql
@@ -108,6 +111,7 @@ Summary:	PostgreSQL support for the Courier authentication library
 Summary(pl):	Obs³uga PostgreSQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
+Requires(pre,postun):	sed >= 4.0
 Obsoletes:	courier-authpgsql
 Obsoletes:	courier-imap-authpgsql
 Obsoletes:	sqwebmail-auth-pgsql
@@ -127,6 +131,7 @@ Summary:	Userdb support for the Courier authentication library
 Summary(pl):	Obs³uga userdb dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
+Requires(pre,postun):	sed >= 4.0
 Obsoletes:	courier-imap-userdb
 Obsoletes:	sqwebmail-auth-userdb
 
@@ -149,6 +154,7 @@ Summary:	External authentication module that communicates via pipes
 Summary(pl):	Zewnêtrzny modu³ uwierzytelniaj±cy komunikuj±cy siê przez potoki
 Group:		Networking/Daemons
 Requires:	%{name} = %{version}-%{release}
+Requires(pre,postun):	sed >= 4.0
 
 %description pipe
 This package installs the authpipe module, which is a generic plugin
@@ -178,6 +184,7 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 cp /usr/share/automake/config.sub libltdl
@@ -230,7 +237,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig %{_libexecdir}/courier-authlib
-
 /sbin/chkconfig --add courier-authlib
 
 if [ -f /var/lock/subsys/courier-authlib ]; then
@@ -252,60 +258,100 @@ fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 
 %post authldap
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	sed -i -e '/^authmodulelist=/{/\bauthldap\b/!s/"$/ authldap"/}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun authldap
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	sed -i -e '/^authmodulelist=/{s/ \?\bauthldap\b \?//}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %post authmysql
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	sed -i -e '/^authmodulelist=/{/\bauthmysql\b/!s/"$/ authmysql"/}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun authmysql
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	sed -i -e '/^authmodulelist=/{s/ \?\bauthmysql\b \?//}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %post authpgsql
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	sed -i -e '/^authmodulelist=/{/\bauthpgsql\b/!s/"$/ authpgsql"/}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun authpgsql
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	sed -i -e '/^authmodulelist=/{s/ \?\bauthpgsql\b \?//}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %post userdb
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	sed -i -e '/^authmodulelist=/{/\buserdb\b/!s/"$/ userdb"/}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun userdb
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	sed -i -e '/^authmodulelist=/{s/ \?\buserdb\b \?//}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %post pipe
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	sed -i -e '/^authmodulelist=/{/\bpipe\b/!s/"$/ pipe"/}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
 fi
 
 %postun pipe
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	sed -i -e '/^authmodulelist=/{s/ \?\bpipe\b \?//}' /etc/authlib/authdaemonrc
+fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 if [ -f /var/lock/subsys/courier-authlib ]; then
 	/etc/rc.d/init.d/courier-authlib restart
