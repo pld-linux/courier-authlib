@@ -191,12 +191,12 @@ cp /usr/share/automake/config.sub libltdl
 %{__libtoolize}
 
 # Change Makefile.am files and force recreate Makefile.in's.
-OLDDIR=`pwd`
-find -type f -a \( -name configure.in -o -name configure.ac \) | while read FILE; do
-	cd "`dirname "$FILE"`"
+OLDDIR=$(pwd)
+for FILE in {,*/}configure.{in,ac}; do
+	cd "$(dirname "$FILE")"
 
 	if [ -f Makefile.am ]; then
-		sed -i -e '/_LDFLAGS=-static/d' Makefile.am
+		sed -i -e '/_[L]DFLAGS=-static/d' Makefile.am
 	fi
 
 	%{__aclocal}
