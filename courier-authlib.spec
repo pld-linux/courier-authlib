@@ -69,7 +69,7 @@ potrzebne w czasie dzia³ania programów.
 Summary:	LDAP support for the Courier authentication library
 Summary(pl):	Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
-PreReq:		%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	courier-authldap
 Obsoletes:	courier-imap-authldap
 Obsoletes:	sqwebmail-auth-ldap
@@ -88,7 +88,7 @@ LDAP.
 Summary:	MySQL support for the Courier authentication library
 Summary(pl):	Obs³uga MySQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
-PreReq:		%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	courier-authmysql
 Obsoletes:	courier-imap-authmysql
 Obsoletes:	sqwebmail-auth-mysql
@@ -107,7 +107,7 @@ MySQL.
 Summary:	PostgreSQL support for the Courier authentication library
 Summary(pl):	Obs³uga PostgreSQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
-PreReq:		%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	courier-authpgsql
 Obsoletes:	courier-imap-authpgsql
 Obsoletes:	sqwebmail-auth-pgsql
@@ -126,7 +126,7 @@ PostgreSQL.
 Summary:	Userdb support for the Courier authentication library
 Summary(pl):	Obs³uga userdb dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
-PreReq:		%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	courier-imap-userdb
 Obsoletes:	sqwebmail-auth-userdb
 
@@ -148,7 +148,7 @@ Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 Summary:	External authentication module that communicates via pipes
 Summary(pl):	Zewnêtrzny modu³ uwierzytelniaj±cy komunikuj±cy siê przez potoki
 Group:		Networking/Daemons
-PreReq:		%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description pipe
 This package installs the authpipe module, which is a generic plugin
@@ -548,7 +548,7 @@ fi
 %attr(755,root,root) %{_bindir}/courierauthconfig
 %{_includedir}/*
 %{_mandir}/man3/*
-%{_libexecdir}/courier-authlib/*.so
+%attr(755,root,root) %{_libexecdir}/courier-authlib/*.so
 
 %files authldap
 %defattr(644,root,root,755)
