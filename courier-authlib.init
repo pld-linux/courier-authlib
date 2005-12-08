@@ -3,7 +3,7 @@
 # courier-authlib	courier-authlib
 #
 # chkconfig:	345 85 15
-# description:	courier-authlib 
+# description:	courier-authlib
 #
 
 # Source function library
