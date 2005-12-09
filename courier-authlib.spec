@@ -1,12 +1,12 @@
 Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.57
-Release:	4
+Version:	0.58
+Release:	1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	af146ac84f0c3ee00006af50b4415d8a
+# Source0-md5:	fb691558d611cb191ae6a83002f0195b
 Source1:	%{name}.init
 Patch0:		%{name}-build.patch
 Patch1:		%{name}-md5sum-passwords.patch
