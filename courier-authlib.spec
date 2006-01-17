@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.58
-Release:	1
+Release:	2
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -19,7 +19,7 @@ BuildRequires:	expect
 BuildRequires:	libtool
 BuildRequires:	libltdl-devel
 BuildRequires:	mysql-devel
-BuildRequires:	openldap-devel
+BuildRequires:	openldap-devel >= 2.3.0
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	sed >= 4.0
