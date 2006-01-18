@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.58
-Release:	2
+Release:	3
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -251,10 +251,10 @@ fi
 %preun
 if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del courier-authlib
-fi
 
-if [ -f /var/lock/subsys/courier-authlib ]; then
-	/etc/rc.d/init.d/courier-authlib stop
+	if [ -f /var/lock/subsys/courier-authlib ]; then
+		/etc/rc.d/init.d/courier-authlib stop
+	fi
 fi
 
 %postun
