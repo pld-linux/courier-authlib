@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.58
-Release:	3
+Release:	4
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -16,8 +16,8 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	db-devel
 BuildRequires:	expect
-BuildRequires:	libtool
 BuildRequires:	libltdl-devel
+BuildRequires:	libtool
 BuildRequires:	mysql-devel
 BuildRequires:	openldap-devel >= 2.3.0
 BuildRequires:	pam-devel
@@ -25,10 +25,11 @@ BuildRequires:	postgresql-devel
 BuildRequires:	sed >= 4.0
 BuildRequires:	sysconftool
 BuildRequires:	zlib-devel
-Requires:	rc-scripts
-Requires:	/sbin/chkconfig
+Requires(post,postun):	/sbin/ldconfig
 Requires(post,preun):	/sbin/chkconfig
-Requires(post):	/sbin/ldconfig
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	/sbin/chkconfig
+Requires:	rc-scripts
 Obsoletes:	sqwebmail-auth-cram
 Obsoletes:	sqwebmail-auth-pam
 Obsoletes:	sqwebmail-auth-pwd
@@ -42,6 +43,23 @@ The Courier authentication library provides authentication services
 for other Courier applications.
 
 %description -l pl
+Biblioteka uwierzytelniania Couriera dostarcza us³ugi uwierzytelniania
+dla innych aplikacji Couriera.
+
+%package libs
+Summary:	Courier authentication library
+Summary(pl):	Biblioteka uwierzytelniania Couriera
+Group:		Libraries
+Requires(post,postun):	/sbin/ldconfig
+
+%description libs
+The Courier authentication library provides authentication services
+for other Courier applications.
+
+This package contains libcourierauth.so which client programs link
+against.
+
+%description libs -l pl
 Biblioteka uwierzytelniania Couriera dostarcza us³ugi uwierzytelniania
 dla innych aplikacji Couriera.
 
@@ -73,8 +91,8 @@ potrzebne w czasie dzia³ania programów.
 Summary:	LDAP support for the Courier authentication library
 Summary(pl):	Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
-Requires:	%{name} = %{version}-%{release}
 Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	courier-authldap
 Obsoletes:	courier-imap-authldap
 Obsoletes:	sqwebmail-auth-ldap
@@ -93,8 +111,8 @@ LDAP.
 Summary:	MySQL support for the Courier authentication library
 Summary(pl):	Obs³uga MySQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
-Requires:	%{name} = %{version}-%{release}
 Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	courier-authmysql
 Obsoletes:	courier-imap-authmysql
 Obsoletes:	sqwebmail-auth-mysql
@@ -113,8 +131,8 @@ MySQL.
 Summary:	PostgreSQL support for the Courier authentication library
 Summary(pl):	Obs³uga PostgreSQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
-Requires:	%{name} = %{version}-%{release}
 Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	courier-authpgsql
 Obsoletes:	courier-imap-authpgsql
 Obsoletes:	sqwebmail-auth-pgsql
@@ -133,8 +151,8 @@ PostgreSQL.
 Summary:	Userdb support for the Courier authentication library
 Summary(pl):	Obs³uga userdb dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
-Requires:	%{name} = %{version}-%{release}
 Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
 Obsoletes:	courier-imap-userdb
 Obsoletes:	sqwebmail-auth-userdb
 
@@ -156,8 +174,8 @@ Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
 Summary:	External authentication module that communicates via pipes
 Summary(pl):	Zewnêtrzny modu³ uwierzytelniaj±cy komunikuj±cy siê przez potoki
 Group:		Networking/Daemons
-Requires:	%{name} = %{version}-%{release}
 Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
 
 %description pipe
 This package installs the authpipe module, which is a generic plugin
@@ -174,8 +192,8 @@ Summary:	Courier LDAP schema
 Summary(pl):	Schemat LDAP Couriera
 Group:		Networking/Daemons
 Requires(post,postun):	sed >= 4.0
-Requires:	sed >= 4.0
 Requires:	openldap-servers
+Requires:	sed >= 4.0
 
 %description -n openldap-schema-courier
 This package contains Courier authldap.schema for openldap.
@@ -238,6 +256,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+
 %post
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 /sbin/chkconfig --add courier-authlib
@@ -258,6 +277,12 @@ if [ "$1" = "0" ]; then
 fi
 
 %postun
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+
+%post libs
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+
+%postun libs
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 
 %post authldap
@@ -565,7 +590,6 @@ fi
 # COPYING contains only note
 %doc AUTHORS COPYING ChangeLog NEWS README README*html README.authmysql.myownquery authldap.schema
 %dir %{_sysconfdir}/authlib
-%dir %{_libexecdir}/courier-authlib
 %attr(754,root,root) /etc/rc.d/init.d/courier-authlib
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authdaemonrc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authdaemond
@@ -573,7 +597,6 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/makedatprog
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthcustom.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpam.so.*.*.*
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauth.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthcommon.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsasl.so.*.*.*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so.*.*.*
@@ -590,6 +613,11 @@ fi
 %attr(755,root,root) %{_sbindir}/authtest
 %attr(755,root,root) %{_sbindir}/courierlogger
 %{_mandir}/man1/*
+
+%files libs
+%defattr(644,root,root,755)
+%dir %{_libexecdir}/courier-authlib
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauth.so.*.*.*
 
 %files devel
 %defattr(644,root,root,755)
