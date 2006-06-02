@@ -22,7 +22,7 @@ BuildRequires:	mysql-devel
 BuildRequires:	openldap-devel >= 2.3.0
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
-BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	rpmbuild(macros) >= 1.304
 BuildRequires:	sed >= 4.0
 BuildRequires:	sysconftool
 BuildRequires:	zlib-devel
@@ -360,32 +360,12 @@ fi
 %service -q courier-authlib restart
 
 %post -n openldap-schema-courier
-if ! grep -q %{schemadir}/courier.schema /etc/openldap/slapd.conf; then
-	sed -i -e '
-		/^include.*local.schema/{
-			i\
-include		%{schemadir}/courier.schema
-		}
-
-		# enable dependant schemas: nis.schema, cosine.schema
-		/^#include.*\(nis\|cosine\)\.schema/{
-			s/^#//
-		}
-	' /etc/openldap/slapd.conf
-fi
+%openldap_schema_register %{schemadir}/courier.schema -d nis,cosine
 %service -q ldap restart
 
 %postun -n openldap-schema-courier
 if [ "$1" = "0" ]; then
-	if grep -q %{schemadir}/courier.schema /etc/openldap/slapd.conf; then
-		sed -i -e '
-		/^include.*\/usr\/share\/openldap\/schema\/courier.schema/d
-
-		# for symmetry it would be nice if we disable enabled schemas in post,
-		# but we really can not do that, it would break something else.
-		' /etc/openldap/slapd.conf
-	fi
-
+	%openldap_schema_unregister %{schemadir}/courier.schema
 	%service -q ldap restart
 fi
 
