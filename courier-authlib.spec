@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.58
-Release:	6
+Release:	7
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -250,6 +250,8 @@ install authldap.schema $RPM_BUILD_ROOT%{schemadir}/courier.schema
 # make config files
 ./sysconftool $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
+
+touch $RPM_BUILD_ROOT%{_localstatedir}/spool/authdaemon/socket
 
 # remove static library - for now
 rm -f $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
@@ -538,6 +540,7 @@ fi
 %{_libexecdir}/courier-authlib/libcourierauthsasl.la
 %{_libexecdir}/courier-authlib/libcourierauthsaslclient.la
 %attr(770,root,daemon) %dir %{_localstatedir}/spool/authdaemon
+%attr(777,root,root) %ghost %{_localstatedir}/spool/authdaemon/socket
 %attr(755,root,root) %{_sbindir}/authdaemond
 %attr(755,root,root) %{_sbindir}/authenumerate
 %attr(755,root,root) %{_sbindir}/authpasswd
