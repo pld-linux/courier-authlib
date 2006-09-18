@@ -209,32 +209,13 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 %patch2 -p1
 
 %build
-cp /usr/share/automake/config.sub libltdl
-%{__libtoolize}
-
-# Change Makefile.am files and force recreate Makefile.in's.
-OLDDIR=$(pwd)
-for FILE in {,*/}configure.{in,ac}; do
-	cd "$(dirname "$FILE")"
-
-	if [ -f Makefile.am ]; then
-		sed -i -e '/_[L]DFLAGS=-static/d' Makefile.am
-	fi
-
-	%{__aclocal}
-	%{__autoconf}
-	%{__autoheader}
-	%{__automake}
-
-	cd "$OLDDIR"
-done
-
 %configure \
 	--with-db=db \
 	--with-mailuser=daemon \
 	--with-mailgroup=daemon
 
-%{__make}
+%{__make} \
+	LDFLAGS="%{rpmldflags} -lcrypt"
 
 %install
 rm -rf $RPM_BUILD_ROOT
