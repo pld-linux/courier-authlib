@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.58
-Release:	7
+Release:	8
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -11,6 +11,7 @@ Source1:	%{name}.init
 Patch0:		%{name}-build.patch
 Patch1:		%{name}-md5sum-passwords.patch
 Patch2:		%{name}-authdaemonrc.patch
+Patch3:		%{name}-nostatic.patch
 URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -23,7 +24,6 @@ BuildRequires:	openldap-devel >= 2.3.0
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	rpmbuild(macros) >= 1.304
-BuildRequires:	sed >= 4.0
 BuildRequires:	sysconftool
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
@@ -207,8 +207,19 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
+for d in .  gdbmobj bdbobj md5 sha1 libhmac makedat userdb; do
+cd $d
+	%{__libtoolize}
+	%{__aclocal}
+	%{__autoconf}
+	%{__autoheader}
+	%{__automake}
+cd -
+done
+
 %configure \
 	--with-db=db \
 	--with-mailuser=daemon \
@@ -220,13 +231,14 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} -j1 install \
+%{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb,%{schemadir}}
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb,%{schemadir},%{_bindir}}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
 install authldap.schema $RPM_BUILD_ROOT%{schemadir}/courier.schema
+install makedat/makedat $RPM_BUILD_ROOT%{_bindir}/makedat
 
 # make config files
 ./sysconftool $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
@@ -235,11 +247,10 @@ rm -f $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
 touch $RPM_BUILD_ROOT%{_localstatedir}/spool/authdaemon/socket
 
 # remove static library - for now
-rm -f $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
+rm $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
 
 %post
 /sbin/ldconfig %{_libexecdir}/courier-authlib
@@ -265,7 +276,7 @@ fi
 %post authldap
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
-	sed -i -e '/^authmodulelist=/{/\bauthldap\b/!s/"$/ authldap"/}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{/\bauthldap\b/!s/"$/ authldap"/}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -273,7 +284,7 @@ fi
 %postun authldap
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
-	sed -i -e '/^authmodulelist=/{s/ \?\bauthldap\b \?//}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bauthldap\b \?//}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -281,7 +292,7 @@ fi
 %post authmysql
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
-	sed -i -e '/^authmodulelist=/{/\bauthmysql\b/!s/"$/ authmysql"/}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{/\bauthmysql\b/!s/"$/ authmysql"/}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -289,7 +300,7 @@ fi
 %postun authmysql
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
-	sed -i -e '/^authmodulelist=/{s/ \?\bauthmysql\b \?//}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bauthmysql\b \?//}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -297,7 +308,7 @@ fi
 %post authpgsql
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
-	sed -i -e '/^authmodulelist=/{/\bauthpgsql\b/!s/"$/ authpgsql"/}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{/\bauthpgsql\b/!s/"$/ authpgsql"/}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -305,7 +316,7 @@ fi
 %postun authpgsql
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
-	sed -i -e '/^authmodulelist=/{s/ \?\bauthpgsql\b \?//}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bauthpgsql\b \?//}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -313,7 +324,7 @@ fi
 %post userdb
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
-	sed -i -e '/^authmodulelist=/{/\buserdb\b/!s/"$/ userdb"/}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{/\buserdb\b/!s/"$/ userdb"/}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -321,7 +332,7 @@ fi
 %postun userdb
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
-	sed -i -e '/^authmodulelist=/{s/ \?\buserdb\b \?//}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\buserdb\b \?//}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -329,7 +340,7 @@ fi
 %post pipe
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
-	sed -i -e '/^authmodulelist=/{/\bpipe\b/!s/"$/ pipe"/}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{/\bpipe\b/!s/"$/ pipe"/}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -337,7 +348,7 @@ fi
 %postun pipe
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
-	sed -i -e '/^authmodulelist=/{s/ \?\bpipe\b \?//}' /etc/authlib/authdaemonrc
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bpipe\b \?//}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -356,11 +367,11 @@ fi
 if [ -f /etc/courier/authdaemonrc ]; then
 	. /etc/courier/authdaemonrc
 
-	sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+	%{__sed} -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
 		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-	sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+	%{__sed} -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
 		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-	sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+	%{__sed} -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
 fi
 if [ -f /var/lock/subsys/courier ]; then
 	if [ -f /var/spool/courier/authdaemon/pid ]; then
@@ -374,11 +385,11 @@ fi
 if [ -f /etc/courier-imap/authdaemonrc ]; then
 	. /etc/courier-imap/authdaemonrc
 
-	sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+	%{__sed} -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
 		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-	sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+	%{__sed} -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
 		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-	sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+	%{__sed} -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
 fi
 if [ -f /var/lock/subsys/courier-imap ]; then
 	if [ -f /var/lib/authdaemon/pid ]; then
@@ -392,11 +403,11 @@ fi
 if [ -f /etc/sqwebmail/authdaemonrc ]; then
 	. /etc/sqwebmail/authdaemonrc
 
-	sed -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
+	%{__sed} -i s/^authmodulelist=.*/"authmodulelist=\"`echo $authmodulelist \
 		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-	sed -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
+	%{__sed} -i s/^authmodulelistorig=.*/"authmodulelistorig=\"`echo $authmodulelistorig\
 		| sed s/'authcram'/''/ | sed s/'  '/' '/`\""/ /etc/authlib/authdaemonrc
-	sed -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
+	%{__sed} -i s/^daemons=.*/"daemons=$daemons"/ /etc/authlib/authdaemonrc
 fi
 if [ -f /var/lock/subsys/sqwebmail ]; then
 	if [ -f /var/spool/sqwebmail/authdaemon/pid ]; then
@@ -503,6 +514,7 @@ fi
 %defattr(644,root,root,755)
 # COPYING contains only note
 %doc AUTHORS COPYING ChangeLog NEWS README README*html README.authmysql.myownquery authldap.schema
+%attr(755,root,root) %{_bindir}/makedat
 %dir %{_sysconfdir}/authlib
 %attr(754,root,root) /etc/rc.d/init.d/courier-authlib
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authdaemonrc
