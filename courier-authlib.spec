@@ -1,5 +1,5 @@
 Summary:	Courier authentication library
-Summary(pl):	Biblioteka uwierzytelniania Couriera
+Summary(pl.UTF-8):   Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.59
 Release:	0.1
@@ -44,13 +44,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 The Courier authentication library provides authentication services
 for other Courier applications.
 
-%description -l pl
-Biblioteka uwierzytelniania Couriera dostarcza us³ugi uwierzytelniania
+%description -l pl.UTF-8
+Biblioteka uwierzytelniania Couriera dostarcza usÅ‚ugi uwierzytelniania
 dla innych aplikacji Couriera.
 
 %package libs
 Summary:	Courier authentication library
-Summary(pl):	Biblioteka uwierzytelniania Couriera
+Summary(pl.UTF-8):   Biblioteka uwierzytelniania Couriera
 Group:		Libraries
 Requires(post,postun):	/sbin/ldconfig
 
@@ -61,13 +61,13 @@ for other Courier applications.
 This package contains libcourierauth.so which client programs link
 against.
 
-%description libs -l pl
-Biblioteka uwierzytelniania Couriera dostarcza us³ugi uwierzytelniania
+%description libs -l pl.UTF-8
+Biblioteka uwierzytelniania Couriera dostarcza usÅ‚ugi uwierzytelniania
 dla innych aplikacji Couriera.
 
 %package devel
 Summary:	Development files for the Courier authentication library
-Summary(pl):	Pliki programistyczne dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):   Pliki programistyczne dla biblioteki uwierzytelniania Couriera
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	%{name}-authldap = %{version}-%{release}
@@ -82,16 +82,16 @@ order to build the rest of the Courier packages. After they are built
 and installed this package can be removed. Files in this package are
 not needed at runtime.
 
-%description devel -l pl
+%description devel -l pl.UTF-8
 Ten pakiet zawiera pliki programistyczne potrzebne do kompilacji
-pakietów Couriera u¿ywaj±cych biblioteki uwierzytelniania. Nale¿y go
-zainstalowaæ aby zbudowaæ resztê pakietów Couriera. Po ich zbudowaniu
-i zainstalowaniu ten pakiet mo¿na usun±æ. Pliki z tego pakietu nie s±
-potrzebne w czasie dzia³ania programów.
+pakietÃ³w Couriera uÅ¼ywajÄ…cych biblioteki uwierzytelniania. NaleÅ¼y go
+zainstalowaÄ‡ aby zbudowaÄ‡ resztÄ™ pakietÃ³w Couriera. Po ich zbudowaniu
+i zainstalowaniu ten pakiet moÅ¼na usunÄ…Ä‡. Pliki z tego pakietu nie sÄ…
+potrzebne w czasie dziaÅ‚ania programÃ³w.
 
 %package authldap
 Summary:	LDAP support for the Courier authentication library
-Summary(pl):	Obs³uga LDAP dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):   ObsÅ‚uga LDAP dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -104,14 +104,14 @@ This package installs LDAP support for the Courier authentication
 library. Install this package in order to be able to authenticate
 using LDAP.
 
-%description authldap -l pl
-Ten pakiet dodaje obs³ugê LDAP do biblioteki uwierzytelniania
-Couriera. Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem
+%description authldap -l pl.UTF-8
+Ten pakiet dodaje obsÅ‚ugÄ™ LDAP do biblioteki uwierzytelniania
+Couriera. NaleÅ¼y go zainstalowaÄ‡ aby mÃ³c uwierzytelniaÄ‡ siÄ™ z uÅ¼yciem
 LDAP.
 
 %package authmysql
 Summary:	MySQL support for the Courier authentication library
-Summary(pl):	Obs³uga MySQL dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):   ObsÅ‚uga MySQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -124,14 +124,14 @@ This package installs MySQL support for the Courier authentication
 library. Install this package in order to be able to authenticate
 using MySQL.
 
-%description authmysql -l pl
-Ten pakiet dodaje obs³ugê MySQL do biblioteki uwierzytelniania
-Couriera. Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem
+%description authmysql -l pl.UTF-8
+Ten pakiet dodaje obsÅ‚ugÄ™ MySQL do biblioteki uwierzytelniania
+Couriera. NaleÅ¼y go zainstalowaÄ‡ aby mÃ³c uwierzytelniaÄ‡ siÄ™ z uÅ¼yciem
 MySQL.
 
 %package authpgsql
 Summary:	PostgreSQL support for the Courier authentication library
-Summary(pl):	Obs³uga PostgreSQL dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):   ObsÅ‚uga PostgreSQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -144,14 +144,14 @@ This package installs PostgreSQL support for the Courier
 authentication library. Install this package in order to be able to
 authenticate using PostgreSQL.
 
-%description authpgsql -l pl
-Ten pakiet dodaje obs³ugê PostgreSQL do biblioteki uwierzytelniania
-Couriera. Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem
+%description authpgsql -l pl.UTF-8
+Ten pakiet dodaje obsÅ‚ugÄ™ PostgreSQL do biblioteki uwierzytelniania
+Couriera. NaleÅ¼y go zainstalowaÄ‡ aby mÃ³c uwierzytelniaÄ‡ siÄ™ z uÅ¼yciem
 PostgreSQL.
 
 %package userdb
 Summary:	Userdb support for the Courier authentication library
-Summary(pl):	Obs³uga userdb dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):   ObsÅ‚uga userdb dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -165,16 +165,16 @@ accounts using a GDBM-based database file.
 
 Install this package in order to be able to authenticate with userdb.
 
-%description userdb -l pl
-Ten pakiet dodaje obs³ugê userdb do biblioteki uwierzytelniania
-Couriera. Userdb to prosty sposób zarz±dzania wirtualnymi kontami
-pocztowymi przy u¿yciu pliku bazy danych opartej na GDBM.
+%description userdb -l pl.UTF-8
+Ten pakiet dodaje obsÅ‚ugÄ™ userdb do biblioteki uwierzytelniania
+Couriera. Userdb to prosty sposÃ³b zarzÄ…dzania wirtualnymi kontami
+pocztowymi przy uÅ¼yciu pliku bazy danych opartej na GDBM.
 
-Nale¿y go zainstalowaæ aby móc uwierzytelniaæ siê z u¿yciem userdb.
+NaleÅ¼y go zainstalowaÄ‡ aby mÃ³c uwierzytelniaÄ‡ siÄ™ z uÅ¼yciem userdb.
 
 %package pipe
 Summary:	External authentication module that communicates via pipes
-Summary(pl):	Zewnêtrzny modu³ uwierzytelniaj±cy komunikuj±cy siê przez potoki
+Summary(pl.UTF-8):   ZewnÄ™trzny moduÅ‚ uwierzytelniajÄ…cy komunikujÄ…cy siÄ™ przez potoki
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -184,14 +184,14 @@ This package installs the authpipe module, which is a generic plugin
 that enables authentication requests to be serviced by an external
 program, then communicates through messages on stdin and stdout.
 
-%description pipe -l pl
-Pakiet ten instaluje modu³ authpipe, który jest ogóln± wtyczk±
-umo¿liwiaj±c± obs³ugê ¿±dañ uwierzytelnienia przez zewnêtrzny program
-komunikuj±cy siê poprzez wiadomo¶ci wysy³ane na stdin i stdout.
+%description pipe -l pl.UTF-8
+Pakiet ten instaluje moduÅ‚ authpipe, ktÃ³ry jest ogÃ³lnÄ… wtyczkÄ…
+umoÅ¼liwiajÄ…cÄ… obsÅ‚ugÄ™ Å¼Ä…daÅ„ uwierzytelnienia przez zewnÄ™trzny program
+komunikujÄ…cy siÄ™ poprzez wiadomoÅ›ci wysyÅ‚ane na stdin i stdout.
 
 %package -n openldap-schema-courier
 Summary:	Courier LDAP schema
-Summary(pl):	Schemat LDAP Couriera
+Summary(pl.UTF-8):   Schemat LDAP Couriera
 Group:		Networking/Daemons
 Requires(post,postun):	sed >= 4.0
 Requires:	openldap-servers
@@ -200,7 +200,7 @@ Requires:	sed >= 4.0
 %description -n openldap-schema-courier
 This package contains Courier authldap.schema for openldap.
 
-%description -n openldap-schema-courier -l pl
+%description -n openldap-schema-courier -l pl.UTF-8
 Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 
 %prep
