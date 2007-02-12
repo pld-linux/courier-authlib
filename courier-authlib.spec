@@ -1,5 +1,5 @@
 Summary:	Courier authentication library
-Summary(pl.UTF-8):   Biblioteka uwierzytelniania Couriera
+Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.59
 Release:	0.1
@@ -50,7 +50,7 @@ dla innych aplikacji Couriera.
 
 %package libs
 Summary:	Courier authentication library
-Summary(pl.UTF-8):   Biblioteka uwierzytelniania Couriera
+Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Group:		Libraries
 Requires(post,postun):	/sbin/ldconfig
 
@@ -67,7 +67,7 @@ dla innych aplikacji Couriera.
 
 %package devel
 Summary:	Development files for the Courier authentication library
-Summary(pl.UTF-8):   Pliki programistyczne dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):	Pliki programistyczne dla biblioteki uwierzytelniania Couriera
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	%{name}-authldap = %{version}-%{release}
@@ -91,7 +91,7 @@ potrzebne w czasie działania programów.
 
 %package authldap
 Summary:	LDAP support for the Courier authentication library
-Summary(pl.UTF-8):   Obsługa LDAP dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):	Obsługa LDAP dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -111,7 +111,7 @@ LDAP.
 
 %package authmysql
 Summary:	MySQL support for the Courier authentication library
-Summary(pl.UTF-8):   Obsługa MySQL dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):	Obsługa MySQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -131,7 +131,7 @@ MySQL.
 
 %package authpgsql
 Summary:	PostgreSQL support for the Courier authentication library
-Summary(pl.UTF-8):   Obsługa PostgreSQL dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):	Obsługa PostgreSQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -151,7 +151,7 @@ PostgreSQL.
 
 %package userdb
 Summary:	Userdb support for the Courier authentication library
-Summary(pl.UTF-8):   Obsługa userdb dla biblioteki uwierzytelniania Couriera
+Summary(pl.UTF-8):	Obsługa userdb dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -174,7 +174,7 @@ Należy go zainstalować aby móc uwierzytelniać się z użyciem userdb.
 
 %package pipe
 Summary:	External authentication module that communicates via pipes
-Summary(pl.UTF-8):   Zewnętrzny moduł uwierzytelniający komunikujący się przez potoki
+Summary(pl.UTF-8):	Zewnętrzny moduł uwierzytelniający komunikujący się przez potoki
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
@@ -191,7 +191,7 @@ komunikujący się poprzez wiadomości wysyłane na stdin i stdout.
 
 %package -n openldap-schema-courier
 Summary:	Courier LDAP schema
-Summary(pl.UTF-8):   Schemat LDAP Couriera
+Summary(pl.UTF-8):	Schemat LDAP Couriera
 Group:		Networking/Daemons
 Requires(post,postun):	sed >= 4.0
 Requires:	openldap-servers
