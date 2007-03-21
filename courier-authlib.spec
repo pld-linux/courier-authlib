@@ -2,7 +2,7 @@ Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.59.1
-Release:	1
+Release:	2
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -73,7 +73,8 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	%{name}-authldap = %{version}-%{release}
 Requires:	%{name}-authmysql = %{version}-%{release}
 Requires:	%{name}-authpgsql = %{version}-%{release}
-Requires:	%{name}-userdb = %{version}-%{release}
+Requires:	%{name}-authuserdb = %{version}-%{release}
+Requires:	%{name}-authpipe = %{version}-%{release}
 
 %description devel
 This package contains the development files needed to compile Courier
@@ -149,42 +150,44 @@ Ten pakiet dodaje obsługę PostgreSQL do biblioteki uwierzytelniania
 Couriera. Należy go zainstalować aby móc uwierzytelniać się z użyciem
 PostgreSQL.
 
-%package userdb
+%package authuserdb
 Summary:	Userdb support for the Courier authentication library
 Summary(pl.UTF-8):	Obsługa userdb dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	courier-authlib-userdb
 Obsoletes:	courier-imap-userdb
 Obsoletes:	sqwebmail-auth-userdb
 
-%description userdb
+%description authuserdb
 This package installs the userdb support for the Courier
 authentication library. Userdb is a simple way to manage virtual mail
 accounts using a GDBM-based database file.
 
 Install this package in order to be able to authenticate with userdb.
 
-%description userdb -l pl.UTF-8
+%description authuserdb -l pl.UTF-8
 Ten pakiet dodaje obsługę userdb do biblioteki uwierzytelniania
 Couriera. Userdb to prosty sposób zarządzania wirtualnymi kontami
 pocztowymi przy użyciu pliku bazy danych opartej na GDBM.
 
 Należy go zainstalować aby móc uwierzytelniać się z użyciem userdb.
 
-%package pipe
+%package authpipe
 Summary:	External authentication module that communicates via pipes
 Summary(pl.UTF-8):	Zewnętrzny moduł uwierzytelniający komunikujący się przez potoki
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	courier-authlib-authpipe
 
-%description pipe
+%description authpipe
 This package installs the authpipe module, which is a generic plugin
 that enables authentication requests to be serviced by an external
 program, then communicates through messages on stdin and stdout.
 
-%description pipe -l pl.UTF-8
+%description authpipe -l pl.UTF-8
 Pakiet ten instaluje moduł authpipe, który jest ogólną wtyczką
 umożliwiającą obsługę żądań uwierzytelnienia przez zewnętrzny program
 komunikujący się poprzez wiadomości wysyłane na stdin i stdout.
@@ -325,7 +328,7 @@ fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
 
-%post userdb
+%post authuserdb
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
 	%{__sed} -i -e '/^authmodulelist=/{/\buserdb\b/!s/"$/ userdb"/}' /etc/authlib/authdaemonrc
@@ -333,7 +336,7 @@ fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
 
-%postun userdb
+%postun authuserdb
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
 	%{__sed} -i -e '/^authmodulelist=/{s/ \?\buserdb\b \?//}' /etc/authlib/authdaemonrc
@@ -341,7 +344,7 @@ fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
 
-%post pipe
+%post authpipe
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
 	%{__sed} -i -e '/^authmodulelist=/{/\bpipe\b/!s/"$/ pipe"/}' /etc/authlib/authdaemonrc
@@ -349,7 +352,7 @@ fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
 
-%postun pipe
+%postun authpipe
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
 	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bpipe\b \?//}' /etc/authlib/authdaemonrc
@@ -484,7 +487,7 @@ if [ -f /etc/sqwebmail/authpgsqlrc ]; then
 	%service -q courier-authlib restart
 fi
 
-%triggerin -n %{name}-userdb -- courier < 0.48
+%triggerin -n %{name}-authuserdb -- courier < 0.48
 if [ -d /etc/courier/userdb ]; then
 	mv -f /etc/courier/userdb/* /etc/authlib/userdb
 	makeuserdb
@@ -494,7 +497,7 @@ if [ -f /etc/courier/userdb ]; then
 	makeuserdb
 fi
 
-%triggerin -n %{name}-userdb -- courier-imap-userdb < 4.0.0
+%triggerin -n %{name}-authuserdb -- courier-imap-userdb < 4.0.0
 if [ -d /etc/courier-imap/userdb ]; then
 	mv -f /etc/courier-imap/userdb/* /etc/authlib/userdb
 	makeuserdb
@@ -504,7 +507,7 @@ if [ -f /etc/courier-imap/userdb ]; then
 	makeuserdb
 fi
 
-%triggerin -n %{name}-userdb -- sqwebmail-auth-userdb < 5.0.0
+%triggerin -n %{name}-authuserdb -- sqwebmail-auth-userdb < 5.0.0
 if [ -d /etc/sqwebmail/userdb ]; then
 	mv -f /etc/sqwebmail/userdb/* /etc/authlib/userdb
 	makeuserdb
@@ -577,7 +580,7 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpgsql.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthpgsql.la
 
-%files userdb
+%files authuserdb
 %defattr(644,root,root,755)
 %attr(700,root,root) %dir %{_sysconfdir}/authlib/userdb
 %attr(755,root,root) %{_sbindir}/makeuserdb
@@ -590,7 +593,7 @@ fi
 %{_libexecdir}/courier-authlib/libauthuserdb.la
 %{_mandir}/man8/*userdb*
 
-%files pipe
+%files authpipe
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so.*.*.*
 %{_libexecdir}/courier-authlib/libauthpipe.la
