@@ -1,3 +1,16 @@
+# TODO
+# - unpackaged:
+#   /usr/lib/courier-authlib/libauthcustom.so.0
+#   /usr/lib/courier-authlib/libauthldap.so.0
+#   /usr/lib/courier-authlib/libauthmysql.so.0
+#   /usr/lib/courier-authlib/libauthpam.so.0
+#   /usr/lib/courier-authlib/libauthpgsql.so.0
+#   /usr/lib/courier-authlib/libauthpipe.so.0
+#   /usr/lib/courier-authlib/libauthuserdb.so.0
+#   /usr/lib/courier-authlib/libcourierauth.so.0
+#   /usr/lib/courier-authlib/libcourierauthcommon.so.0
+#   /usr/lib/courier-authlib/libcourierauthsasl.so.0
+#   /usr/lib/courier-authlib/libcourierauthsaslclient.so.0
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
@@ -21,7 +34,7 @@ BuildRequires:	expect
 BuildRequires:	libltdl-devel
 BuildRequires:	libtool
 BuildRequires:	mysql-devel
-BuildRequires:	openldap-devel >= 2.4.6
+BuildRequires:	openldap-devel >= 2.3.0
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	rpmbuild(macros) >= 1.304
