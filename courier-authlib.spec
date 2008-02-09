@@ -1,16 +1,3 @@
-# TODO
-# - unpackaged:
-#   /usr/lib/courier-authlib/libauthcustom.so.0
-#   /usr/lib/courier-authlib/libauthldap.so.0
-#   /usr/lib/courier-authlib/libauthmysql.so.0
-#   /usr/lib/courier-authlib/libauthpam.so.0
-#   /usr/lib/courier-authlib/libauthpgsql.so.0
-#   /usr/lib/courier-authlib/libauthpipe.so.0
-#   /usr/lib/courier-authlib/libauthuserdb.so.0
-#   /usr/lib/courier-authlib/libcourierauth.so.0
-#   /usr/lib/courier-authlib/libcourierauthcommon.so.0
-#   /usr/lib/courier-authlib/libcourierauthsasl.so.0
-#   /usr/lib/courier-authlib/libcourierauthsaslclient.so.0
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
@@ -541,10 +528,15 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authsystem.passwd
 %attr(755,root,root) %{_libexecdir}/courier-authlib/makedatprog
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthcustom.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthcustom.so.0
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpam.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpam.so.0
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthcommon.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libcourierauthcommon.so.0
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsasl.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libcourierauthsasl.so.0
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so.0
 %{_libexecdir}/courier-authlib/libauthcustom.la
 %{_libexecdir}/courier-authlib/libauthpam.la
 %{_libexecdir}/courier-authlib/libcourierauth.la
@@ -564,6 +556,7 @@ fi
 %defattr(644,root,root,755)
 %dir %{_libexecdir}/courier-authlib
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauth.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libcourierauth.so.0
 
 %files devel
 %defattr(644,root,root,755)
@@ -578,18 +571,21 @@ fi
 %doc authldap.schema README.ldap
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authldaprc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthldap.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthldap.so.0
 %{_libexecdir}/courier-authlib/libauthldap.la
 
 %files authmysql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authmysqlrc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthmysql.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthmysql.so.0
 %{_libexecdir}/courier-authlib/libauthmysql.la
 
 %files authpgsql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authpgsqlrc
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpgsql.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpgsql.so.0
 %{_libexecdir}/courier-authlib/libauthpgsql.la
 
 %files authuserdb
@@ -602,12 +598,14 @@ fi
 %attr(755,root,root) %{_sbindir}/userdbpw
 %attr(755,root,root) %{_sbindir}/vchkpw2userdb
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthuserdb.so.0
 %{_libexecdir}/courier-authlib/libauthuserdb.la
 %{_mandir}/man8/*userdb*
 
 %files authpipe
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so.*.*.*
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpipe.so.0
 %{_libexecdir}/courier-authlib/libauthpipe.la
 
 %files -n openldap-schema-courier
