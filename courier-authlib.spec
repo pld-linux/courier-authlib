@@ -1,18 +1,17 @@
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.60.2
-Release:	3
+Version:	0.60.5
+Release:	1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	dd972318b77efd0d04dbcb4a6b140bbe
+# Source0-md5:	55a1cd01664aa8943b3639fe4963bfaa
 Source1:	%{name}.init
-Patch0:		%{name}-build.patch
-Patch1:		%{name}-md5sum-passwords.patch
-Patch2:		%{name}-authdaemonrc.patch
-Patch3:		%{name}-nostatic.patch
-Patch4:		%{name}-ltdl.patch
+Patch0:		%{name}-md5sum-passwords.patch
+Patch1:		%{name}-authdaemonrc.patch
+Patch2:		%{name}-nostatic.patch
+Patch3:		%{name}-ltdl.patch
 URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -212,12 +211,11 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 rm -rf libltdl
 
 %build
-for d in .  gdbmobj bdbobj md5 sha1 libhmac makedat userdb; do
+for d in . gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog; do
 cd $d
 	%{__libtoolize}
 	%{__aclocal}
@@ -596,7 +594,7 @@ fi
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_sbindir}/userdbpw
-%attr(755,root,root) %{_sbindir}/vchkpw2userdb
+#%attr(755,root,root) %{_sbindir}/vchkpw2userdb
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthuserdb.so.0
 %{_libexecdir}/courier-authlib/libauthuserdb.la
