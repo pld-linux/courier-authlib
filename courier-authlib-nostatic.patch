@@ -1,46 +1,29 @@
---- courier-authlib-0.58/gdbmobj/Makefile.am~	2005-07-16 21:25:25.000000000 +0300
-+++ courier-authlib-0.58/gdbmobj/Makefile.am	2006-11-09 22:14:18.548842833 +0200
-@@ -20,7 +20,6 @@
- 
- testgdbm_DEPENDENCIES=libgdbmobj.la
- testgdbm_LDADD=libgdbmobj.la @LIBGDBM@
--testgdbm_LDFLAGS=-static
- 
- check-am:
- 	$(srcdir)/testsuite | cmp -s - $(srcdir)/testsuite.txt
---- courier-authlib-0.58/bdbobj/Makefile.am~	2005-07-16 21:25:25.000000000 +0300
-+++ courier-authlib-0.58/bdbobj/Makefile.am	2006-11-09 22:14:18.548842833 +0200
+diff -ur courier-authlib-0.60.5.orig/bdbobj/Makefile.am courier-authlib-0.60.5/bdbobj/Makefile.am
+--- courier-authlib-0.60.5.orig/bdbobj/Makefile.am	2008-05-08 18:00:52.000000000 +0200
++++ courier-authlib-0.60.5/bdbobj/Makefile.am	2008-05-29 15:33:05.000000000 +0200
 @@ -20,7 +20,6 @@
  
  testbdb_DEPENDENCIES=libbdbobj.la
- testbdb_LDADD=libbdbobj.la @LIBDB@
+ testbdb_LDADD=libbdbobj.la
 -testbdb_LDFLAGS=-static
  
  check-am:
  	$(srcdir)/testsuite | cmp -s - $(srcdir)/testsuite.txt
---- courier-authlib-0.58/md5/Makefile.am~	2005-07-16 21:25:25.000000000 +0300
-+++ courier-authlib-0.58/md5/Makefile.am	2006-11-09 22:14:18.548842833 +0200
-@@ -22,7 +22,6 @@
- md5test_SOURCES=md5test.c
- md5test_DEPENDENCIES=libmd5.la
- md5test_LDADD=libmd5.la
--md5test_LDFLAGS=-static
+diff -ur courier-authlib-0.60.5.orig/gdbmobj/Makefile.am courier-authlib-0.60.5/gdbmobj/Makefile.am
+--- courier-authlib-0.60.5.orig/gdbmobj/Makefile.am	2008-05-08 18:00:52.000000000 +0200
++++ courier-authlib-0.60.5/gdbmobj/Makefile.am	2008-05-29 15:33:36.000000000 +0200
+@@ -20,7 +20,6 @@
  
- EXTRA_DIST=md5test.txt hmac.c
+ testgdbm_DEPENDENCIES=libgdbmobj.la
+ testgdbm_LDADD=libgdbmobj.la
+-testgdbm_LDFLAGS=-static
  
---- courier-authlib-0.58/sha1/Makefile.am~	2005-07-16 21:25:25.000000000 +0300
-+++ courier-authlib-0.58/sha1/Makefile.am	2006-11-09 22:14:18.548842833 +0200
-@@ -21,7 +21,6 @@
- testsuite_SOURCES=testsuite.c
- testsuite_DEPENDENCIES=libsha1.la
- testsuite_LDADD=$(testsuite_DEPENDENCIES)
--testsuite_LDFLAGS=-static
- 
- EXTRA_DIST=testsuite.txt hmac.c
- 
---- courier-authlib-0.58/libhmac/Makefile.am~	2005-07-16 21:25:25.000000000 +0300
-+++ courier-authlib-0.58/libhmac/Makefile.am	2006-11-09 22:14:18.548842833 +0200
-@@ -16,12 +16,10 @@
+ check-am:
+ 	$(srcdir)/testsuite | cmp -s - $(srcdir)/testsuite.txt
+diff -ur courier-authlib-0.60.5.orig/libhmac/Makefile.am courier-authlib-0.60.5/libhmac/Makefile.am
+--- courier-authlib-0.60.5.orig/libhmac/Makefile.am	2007-07-21 22:12:29.000000000 +0200
++++ courier-authlib-0.60.5/libhmac/Makefile.am	2008-05-29 15:33:27.000000000 +0200
+@@ -15,12 +15,10 @@
  md5hmactest_SOURCES=md5hmactest.c
  md5hmactest_DEPENDENCIES=libhmac.la @hashlibs@
  md5hmactest_LDADD=$(md5hmactest_DEPENDENCIES)
@@ -53,26 +36,40 @@
  
  EXTRA_DIST=md5hmactest.txt sha1hmactest.txt
  
---- courier-authlib-0.58/makedat/Makefile.am~	2005-07-16 21:25:25.000000000 +0300
-+++ courier-authlib-0.58/makedat/Makefile.am	2006-11-09 22:14:18.548842833 +0200
-@@ -12,4 +12,3 @@
+diff -ur courier-authlib-0.60.5.orig/liblock/Makefile.am courier-authlib-0.60.5/liblock/Makefile.am
+--- courier-authlib-0.60.5.orig/liblock/Makefile.am	2007-07-21 22:12:29.000000000 +0200
++++ courier-authlib-0.60.5/liblock/Makefile.am	2008-05-29 15:33:02.000000000 +0200
+@@ -32,7 +32,6 @@
+ lockmail_SOURCES=lockmail.c
+ lockmail_DEPENDENCIES=liblock.la ../numlib/libnumlib.la
+ lockmail_LDADD=liblock.la ../numlib/libnumlib.la
+-lockmail_LDFLAGS=-static
+ 
+ noinst_DATA=lockmail.html lockmail.1
+ EXTRA_DIST=lockfcntl.c lockflock.c locklockf.c locktest.c $(noinst_DATA)
+diff -ur courier-authlib-0.60.5.orig/liblog/Makefile.am courier-authlib-0.60.5/liblog/Makefile.am
+--- courier-authlib-0.60.5.orig/liblog/Makefile.am	2007-08-30 03:53:08.000000000 +0200
++++ courier-authlib-0.60.5/liblog/Makefile.am	2008-05-29 15:33:30.000000000 +0200
+@@ -13,7 +13,6 @@
+ courierlogger_SOURCES=logger.c
+ courierlogger_DEPENDENCIES=../liblock/liblock.la ../numlib/libnumlib.la
+ courierlogger_LDADD=../liblock/liblock.la ../numlib/libnumlib.la
+-courierlogger_LDFLAGS=-static
+ 
+ if HAVE_SGML
+ courierlogger.html: courierlogger.sgml ../docbook/sgml2html
+diff -ur courier-authlib-0.60.5.orig/makedat/Makefile.am courier-authlib-0.60.5/makedat/Makefile.am
+--- courier-authlib-0.60.5.orig/makedat/Makefile.am	2008-05-08 18:00:53.000000000 +0200
++++ courier-authlib-0.60.5/makedat/Makefile.am	2008-05-29 15:33:21.000000000 +0200
+@@ -11,4 +11,3 @@
  makedatprog_SOURCES=makedatprog.c
  makedatprog_DEPENDENCIES=@dblibrary@
- makedatprog_LDADD=@dblibrary@ @LIBGDBM@ @LIBDB@
+ makedatprog_LDADD=@dblibrary@
 -makedatprog_LDFLAGS=-static
---- courier-authlib-0.58/userdb/Makefile.am~	2005-07-16 21:25:25.000000000 +0300
-+++ courier-authlib-0.58/userdb/Makefile.am	2006-11-09 22:14:18.548842833 +0200
-@@ -19,7 +19,6 @@
- 
- userdbpw_SOURCES=userdbpw.c
- userdbpw_LDADD=libuserdb.la @HMACLIB@ @MD5LIB@ @SHA1LIB@ @CRYPTLIBS@
--userdbpw_LDFLAGS=-static
- 
- man8=makeuserdb.8 userdb.8 userdbpw.8
- man_MANS=$(man8)
---- courier-authlib-0.58/Makefile.am~	2005-08-11 02:52:58.000000000 +0300
-+++ courier-authlib-0.58/Makefile.am	2006-11-09 22:14:18.548842833 +0200
-@@ -357,7 +357,6 @@
+diff -ur courier-authlib-0.60.5.orig/Makefile.am courier-authlib-0.60.5/Makefile.am
+--- courier-authlib-0.60.5.orig/Makefile.am	2008-05-08 19:20:38.000000000 +0200
++++ courier-authlib-0.60.5/Makefile.am	2008-05-29 15:32:56.000000000 +0200
+@@ -346,7 +346,6 @@
  authdaemontest_SOURCES=authdaemontest.c
  authdaemontest_DEPENDENCIES=libcourierauthcommon.la
  authdaemontest_LDADD=libcourierauthcommon.la @NETLIBS@
@@ -80,3 +77,52 @@
  
  authmksock_SOURCES=authmksock.c
  authmksock_LDADD=@NETLIBS@
+diff -ur courier-authlib-0.60.5.orig/md5/Makefile.am courier-authlib-0.60.5/md5/Makefile.am
+--- courier-authlib-0.60.5.orig/md5/Makefile.am	2007-07-21 22:12:29.000000000 +0200
++++ courier-authlib-0.60.5/md5/Makefile.am	2008-05-29 15:32:59.000000000 +0200
+@@ -21,7 +21,6 @@
+ md5test_SOURCES=md5test.c
+ md5test_DEPENDENCIES=libmd5.la
+ md5test_LDADD=libmd5.la
+-md5test_LDFLAGS=-static
+ 
+ EXTRA_DIST=md5test.txt hmac.c
+ 
+diff -ur courier-authlib-0.60.5.orig/rfc822/Makefile.am courier-authlib-0.60.5/rfc822/Makefile.am
+--- courier-authlib-0.60.5.orig/rfc822/Makefile.am	2007-07-21 22:12:29.000000000 +0200
++++ courier-authlib-0.60.5/rfc822/Makefile.am	2008-05-29 15:33:14.000000000 +0200
+@@ -21,12 +21,10 @@
+ testsuite_SOURCES=testsuite.c
+ testsuite_DEPENDENCIES=librfc822.la
+ testsuite_LDADD=librfc822.la
+-testsuite_LDFLAGS=-static
+ 
+ reftest_SOURCES=reftest.c imaprefs.h
+ reftest_DEPENDENCIES=librfc822.la
+ reftest_LDADD=librfc822.la
+-reftest_LDFLAGS=-static
+ 
+ EXTRA_DIST=testsuite.txt reftest.txt $(BUILT_SOURCES)
+ 
+diff -ur courier-authlib-0.60.5.orig/sha1/Makefile.am courier-authlib-0.60.5/sha1/Makefile.am
+--- courier-authlib-0.60.5.orig/sha1/Makefile.am	2007-07-21 22:12:29.000000000 +0200
++++ courier-authlib-0.60.5/sha1/Makefile.am	2008-05-29 15:33:33.000000000 +0200
+@@ -20,7 +20,6 @@
+ testsuite_SOURCES=testsuite.c
+ testsuite_DEPENDENCIES=libsha1.la
+ testsuite_LDADD=$(testsuite_DEPENDENCIES)
+-testsuite_LDFLAGS=-static
+ 
+ EXTRA_DIST=testsuite.txt hmac.c
+ 
+diff -ur courier-authlib-0.60.5.orig/userdb/Makefile.am courier-authlib-0.60.5/userdb/Makefile.am
+--- courier-authlib-0.60.5.orig/userdb/Makefile.am	2008-05-08 19:20:40.000000000 +0200
++++ courier-authlib-0.60.5/userdb/Makefile.am	2008-05-29 15:33:17.000000000 +0200
+@@ -17,7 +17,6 @@
+ 
+ userdbpw_SOURCES=userdbpw.c
+ userdbpw_LDADD=libuserdb.la @HMACLIB@ @MD5LIB@ @SHA1LIB@ @CRYPTLIBS@
+-userdbpw_LDFLAGS=-static
+ 
+ man8=makeuserdb.8 userdb.8 userdbpw.8
+ man_MANS=$(man8)

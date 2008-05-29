@@ -1,14 +1,12 @@
 diff -urN courier-authlib-0.59.orig/Makefile.am courier-authlib-0.59/Makefile.am
 --- courier-authlib-0.59.orig/Makefile.am	2007-01-08 13:18:42.897900250 +0100
 +++ courier-authlib-0.59/Makefile.am	2007-01-08 13:20:17.587818000 +0100
-@@ -6,8 +6,8 @@
- AUTOMAKE = srcdir=${srcdir} @SHELL@ ${srcdir}/automake.fix @AUTOMAKE@
+@@ -5,7 +5,7 @@
+ 
  AUTOMAKE_OPTIONS=dist-bzip2
  
--SUBDIRS=@LIBLTDL_SUBDIR@ @DBSUBDIR@ md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog
--DIST_SUBDIRS=libltdl gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog
-+SUBDIRS=@DBSUBDIR@ md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog
-+DIST_SUBDIRS=gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog
+-SUBDIRS=libltdl gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog
++SUBDIRS=gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog
  
  INCLUDES = $(LTDLINCL)
  
