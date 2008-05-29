@@ -594,7 +594,6 @@ fi
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_sbindir}/userdbpw
-#%attr(755,root,root) %{_sbindir}/vchkpw2userdb
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthuserdb.so.0
 %{_libexecdir}/courier-authlib/libauthuserdb.la
