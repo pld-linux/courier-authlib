@@ -1,12 +1,12 @@
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.60.6
-Release:	4
+Version:	0.62.2
+Release:	1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	1a59634a8c8c4168dc84c920a467c1a9
+# Source0-md5:	8b69745b1cb191ae5f743b8758ad2ff9
 Source1:	%{name}.init
 Patch0:		%{name}-md5sum-passwords.patch
 Patch1:		%{name}-authdaemonrc.patch
@@ -215,13 +215,21 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 rm -rf libltdl
 
 %build
-for d in . gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog; do
-cd $d
+# Change Makefile.am files and force recreate Makefile.in's.
+OLDDIR=`pwd`
+find -type f -a \( -name configure.in -o -name configure.ac \) | while read FILE; do
+	cd "`dirname "$FILE"`"
+	if [ -f Makefile.am ]; then
+		sed -i -e '/_[L]DFLAGS=-static/d' Makefile.am
+	fi
 	%{__libtoolize}
 	%{__aclocal}
 	%{__autoconf}
+	if grep -q AC_CONFIG_HEADER configure.in; then
+		%{__autoheader}
+	fi
 	%{__automake}
-cd -
+	cd "$OLDDIR"
 done
 
 %configure \
@@ -230,13 +238,13 @@ done
 	--with-mailuser=daemon \
 	--with-mailgroup=daemon
 
-%{__make} \
+%{__make} -j1 \
 	LDFLAGS="%{rpmldflags} -lcrypt"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb,%{schemadir},%{_bindir}}
@@ -526,15 +534,15 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authdaemond
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authsystem.passwd
 %attr(755,root,root) %{_libexecdir}/courier-authlib/makedatprog
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthcustom.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthcustom.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthcustom.so.0
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpam.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpam.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpam.so.0
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthcommon.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthcommon.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libcourierauthcommon.so.0
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsasl.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsasl.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libcourierauthsasl.so.0
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libcourierauthsaslclient.so.0
 %{_libexecdir}/courier-authlib/libauthcustom.la
 %{_libexecdir}/courier-authlib/libauthpam.la
@@ -554,7 +562,7 @@ fi
 %files libs
 %defattr(644,root,root,755)
 %dir %{_libexecdir}/courier-authlib
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauth.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libcourierauth.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libcourierauth.so.0
 
 %files devel
@@ -569,21 +577,21 @@ fi
 %defattr(644,root,root,755)
 %doc authldap.schema README.ldap
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authldaprc
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthldap.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthldap.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthldap.so.0
 %{_libexecdir}/courier-authlib/libauthldap.la
 
 %files authmysql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authmysqlrc
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthmysql.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthmysql.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthmysql.so.0
 %{_libexecdir}/courier-authlib/libauthmysql.la
 
 %files authpgsql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authpgsqlrc
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpgsql.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpgsql.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpgsql.so.0
 %{_libexecdir}/courier-authlib/libauthpgsql.la
 
@@ -595,14 +603,14 @@ fi
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_sbindir}/userdbpw
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthuserdb.so.0
 %{_libexecdir}/courier-authlib/libauthuserdb.la
 %{_mandir}/man8/*userdb*
 
 %files authpipe
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so.*.*.*
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpipe.so.0
 %{_libexecdir}/courier-authlib/libauthpipe.la
 
