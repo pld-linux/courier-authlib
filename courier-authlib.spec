@@ -219,9 +219,11 @@ rm -rf libltdl
 OLDDIR=`pwd`
 find -type f -a \( -name configure.in -o -name configure.ac \) | while read FILE; do
 	cd "`dirname "$FILE"`"
+
 	if [ -f Makefile.am ]; then
 		sed -i -e '/_[L]DFLAGS=-static/d' Makefile.am
 	fi
+
 	%{__libtoolize}
 	%{__aclocal}
 	%{__autoconf}
@@ -229,6 +231,7 @@ find -type f -a \( -name configure.in -o -name configure.ac \) | while read FILE
 		%{__autoheader}
 	fi
 	%{__automake}
+
 	cd "$OLDDIR"
 done
 
