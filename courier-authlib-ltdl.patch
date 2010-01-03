@@ -5,20 +5,26 @@ diff -urN courier-authlib-0.59.orig/Makefile.am courier-authlib-0.59/Makefile.am
  
  AUTOMAKE_OPTIONS=dist-bzip2
  
--SUBDIRS=libltdl gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog
-+SUBDIRS=gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog
+-SUBDIRS=libltdl gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb unicode rfc822 random128 liblock liblog
++SUBDIRS=gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb unicode rfc822 random128 liblock liblog
  
  INCLUDES = $(LTDLINCL)
  
-diff -urN courier-authlib-0.59.orig/configure.in courier-authlib-0.59/configure.in
---- courier-authlib-0.59.orig/configure.in	2007-01-08 13:18:42.897900250 +0100
-+++ courier-authlib-0.59/configure.in	2007-01-08 13:18:58.318864000 +0100
-@@ -1083,7 +1083,7 @@
- AC_SUBST(REPOSITORY)
+--- courier-authlib-0.63.0/configure.in~	2009-12-25 22:53:37.000000000 +0100
++++ courier-authlib-0.63.0/configure.in	2010-01-03 23:50:47.949087379 +0100
+@@ -10,7 +10,6 @@
  
- AM_CONDITIONAL(HAVE_SGML, test -d ${srcdir}/docbook)
--AC_CONFIG_SUBDIRS(libltdl bdbobj gdbmobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog)
-+AC_CONFIG_SUBDIRS(bdbobj gdbmobj md5 sha1 libhmac numlib makedat userdb rfc822 random128 liblock liblog)
+ AC_CONFIG_SRCDIR([courierauth.h])
+ AC_CONFIG_HEADERS([courier_auth_config.h])
+-AC_CONFIG_MACRO_DIR([libltdl/m4])
  
- AC_CONFIG_FILES(Makefile authdaemond authdaemonrc authsystem.passwd README.authdebug.html dbobj.h authmigrate courier-authlib.spec courier-authlib.lpspec courier-authlib.sysvinit userdb-test-cram-md5.pl)
- AC_OUTPUT
+ AM_INIT_AUTOMAKE
+ >confdefs.h  # Kill PACKAGE_ macros
+@@ -24,7 +23,6 @@
+ AC_PROG_INSTALL
+ AC_PROG_LN_S
+ AC_PROG_SYSCONFTOOL
+-LT_CONFIG_LTDL_DIR([libltdl])
+ LT_INIT(dlopen)
+ LTDL_INIT
+ AC_SUBST(LTDLINCL)
