@@ -1,3 +1,7 @@
+#
+# Conditional build:
+%bcond_without	ldap		# do not include LDAP support
+
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
@@ -20,7 +24,7 @@ BuildRequires:	expect
 BuildRequires:	libltdl-devel
 BuildRequires:	libtool
 BuildRequires:	mysql-devel
-BuildRequires:	openldap-devel >= 2.3.0
+%{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	rpmbuild(macros) >= 1.304
@@ -69,7 +73,7 @@ Summary:	Development files for the Courier authentication library
 Summary(pl.UTF-8):	Pliki programistyczne dla biblioteki uwierzytelniania Couriera
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-authldap = %{version}-%{release}
+%{?with_ldap:Requires:	%{name}-authldap = %{version}-%{release}}
 Requires:	%{name}-authmysql = %{version}-%{release}
 Requires:	%{name}-authpgsql = %{version}-%{release}
 Requires:	%{name}-authuserdb = %{version}-%{release}
@@ -237,6 +241,7 @@ done
 
 %configure \
 	--enable-ltdl-install=no \
+	%{!?with_ldap:--without-authldap} \
 	--with-db=db \
 	--with-mailuser=daemon \
 	--with-mailgroup=daemon
@@ -576,6 +581,7 @@ fi
 %{_mandir}/man3/*
 %attr(755,root,root) %{_libexecdir}/courier-authlib/*.so
 
+%if %{with ldap}
 %files authldap
 %defattr(644,root,root,755)
 %doc authldap.schema README.ldap
@@ -583,6 +589,7 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthldap.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthldap.so.0
 %{_libexecdir}/courier-authlib/libauthldap.la
+%endif
 
 %files authmysql
 %defattr(644,root,root,755)
@@ -617,6 +624,8 @@ fi
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpipe.so.0
 %{_libexecdir}/courier-authlib/libauthpipe.la
 
+%if %{with ldap}
 %files -n openldap-schema-courier
 %defattr(644,root,root,755)
 %{schemadir}/*.schema
+%endif
