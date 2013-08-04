@@ -1,30 +1,12 @@
-diff -urN courier-authlib-0.59.orig/Makefile.am courier-authlib-0.59/Makefile.am
---- courier-authlib-0.59.orig/Makefile.am	2007-01-08 13:18:42.897900250 +0100
-+++ courier-authlib-0.59/Makefile.am	2007-01-08 13:20:17.587818000 +0100
-@@ -5,7 +5,7 @@
+diff -u courier-authlib-0.65.0.orig/Makefile.am courier-authlib-0.65.0/Makefile.am
+--- courier-authlib-0.65.0.orig/Makefile.am	2013-08-04 10:43:06.000000000 +0000
++++ courier-authlib-0.65.0/Makefile.am	2013-08-04 10:46:20.512179254 +0000
+@@ -4,7 +4,7 @@
  
  AUTOMAKE_OPTIONS=dist-bzip2
  
--SUBDIRS=libltdl gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb unicode rfc822 random128 liblock liblog
-+SUBDIRS=gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb unicode rfc822 random128 liblock liblog
+-SUBDIRS=gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb unicode rfc822 random128 liblock liblog
++SUBDIRS=libltdl gdbmobj bdbobj md5 sha1 libhmac numlib makedat userdb unicode rfc822 random128 liblock liblog
  
  INCLUDES = $(LTDLINCL)
  
---- courier-authlib-0.63.0/configure.in~	2009-12-25 22:53:37.000000000 +0100
-+++ courier-authlib-0.63.0/configure.in	2010-01-03 23:50:47.949087379 +0100
-@@ -10,7 +10,6 @@
- 
- AC_CONFIG_SRCDIR([courierauth.h])
- AC_CONFIG_HEADERS([courier_auth_config.h])
--AC_CONFIG_MACRO_DIR([libltdl/m4])
- 
- AM_INIT_AUTOMAKE
- >confdefs.h  # Kill PACKAGE_ macros
-@@ -24,7 +23,6 @@
- AC_PROG_INSTALL
- AC_PROG_LN_S
- AC_PROG_SYSCONFTOOL
--LT_CONFIG_LTDL_DIR([libltdl])
- LT_INIT(dlopen)
- LTDL_INIT
- AC_SUBST(LTDLINCL)

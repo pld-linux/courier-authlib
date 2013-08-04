@@ -91,10 +91,10 @@ diff -ur courier-authlib-0.60.5.orig/md5/Makefile.am courier-authlib-0.60.5/md5/
 diff -ur courier-authlib-0.60.5.orig/rfc822/Makefile.am courier-authlib-0.60.5/rfc822/Makefile.am
 --- courier-authlib-0.60.5.orig/rfc822/Makefile.am	2007-07-21 22:12:29.000000000 +0200
 +++ courier-authlib-0.60.5/rfc822/Makefile.am	2008-05-29 15:33:14.000000000 +0200
-@@ -21,12 +21,10 @@
+@@ -25,12 +25,10 @@
  testsuite_SOURCES=testsuite.c
- testsuite_DEPENDENCIES=librfc822.la
- testsuite_LDADD=librfc822.la
+ testsuite_DEPENDENCIES=librfc822.la ../unicode/libunicode.la
+ testsuite_LDADD=librfc822.la ../unicode/libunicode.la
 -testsuite_LDFLAGS=-static
  
  reftest_SOURCES=reftest.c imaprefs.h
