@@ -5,12 +5,12 @@
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.63.0
-Release:	6
+Version:	0.65.0
+Release:	1
 License:	GPL
 Group:		Networking/Daemons
 Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	411a927d178f783a1e8fab9964ce0dd2
+# Source0-md5:	e9287e33b0e70ea3745517b4d719948d
 Source1:	%{name}.init
 Patch0:		%{name}-md5sum-passwords.patch
 Patch1:		%{name}-authdaemonrc.patch
@@ -28,6 +28,7 @@ BuildRequires:	mysql-devel
 BuildRequires:	pam-devel
 BuildRequires:	postgresql-devel
 BuildRequires:	rpmbuild(macros) >= 1.304
+BuildRequires:	sqlite3-devel
 BuildRequires:	sysconftool
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
@@ -153,6 +154,41 @@ Ten pakiet dodaje obsługę PostgreSQL do biblioteki uwierzytelniania
 Couriera. Należy go zainstalować aby móc uwierzytelniać się z użyciem
 PostgreSQL.
 
+%package authpipe
+Summary:	External authentication module that communicates via pipes
+Summary(pl.UTF-8):	Zewnętrzny moduł uwierzytelniający komunikujący się przez potoki
+Group:		Networking/Daemons
+Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
+Obsoletes:	courier-authlib-authpipe
+
+%description authpipe
+This package installs the authpipe module, which is a generic plugin
+that enables authentication requests to be serviced by an external
+program, then communicates through messages on stdin and stdout.
+
+%description authpipe -l pl.UTF-8
+Pakiet ten instaluje moduł authpipe, który jest ogólną wtyczką
+umożliwiającą obsługę żądań uwierzytelnienia przez zewnętrzny program
+komunikujący się poprzez wiadomości wysyłane na stdin i stdout.
+
+%package authsqlite
+Summary:	SQLite support for the Courier authentication library
+Summary(pl.UTF-8):	Obsługa SQLite dla biblioteki uwierzytelniania Couriera
+Group:		Networking/Daemons
+Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
+
+%description authsqlite
+This package installs SQLite support for the Courier authentication
+library. Install this package in order to be able to authenticate
+using SQLite.
+
+%description authsqlite -l pl.UTF-8
+Ten pakiet dodaje obsługę SQLite do biblioteki uwierzytelniania
+Couriera. Należy go zainstalować aby móc uwierzytelniać się z użyciem
+SQLite.
+
 %package authuserdb
 Summary:	Userdb support for the Courier authentication library
 Summary(pl.UTF-8):	Obsługa userdb dla biblioteki uwierzytelniania Couriera
@@ -176,24 +212,6 @@ Couriera. Userdb to prosty sposób zarządzania wirtualnymi kontami
 pocztowymi przy użyciu pliku bazy danych opartej na GDBM.
 
 Należy go zainstalować aby móc uwierzytelniać się z użyciem userdb.
-
-%package authpipe
-Summary:	External authentication module that communicates via pipes
-Summary(pl.UTF-8):	Zewnętrzny moduł uwierzytelniający komunikujący się przez potoki
-Group:		Networking/Daemons
-Requires(pre,postun):	sed >= 4.0
-Requires:	%{name} = %{version}-%{release}
-Obsoletes:	courier-authlib-authpipe
-
-%description authpipe
-This package installs the authpipe module, which is a generic plugin
-that enables authentication requests to be serviced by an external
-program, then communicates through messages on stdin and stdout.
-
-%description authpipe -l pl.UTF-8
-Pakiet ten instaluje moduł authpipe, który jest ogólną wtyczką
-umożliwiającą obsługę żądań uwierzytelnienia przez zewnętrzny program
-komunikujący się poprzez wiadomości wysyłane na stdin i stdout.
 
 %package -n openldap-schema-courier
 Summary:	Courier LDAP schema
@@ -342,22 +360,6 @@ fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
 
-%post authuserdb
-if [ "$1" = 1 ]; then
-	# add to authmodulelist list if package is first installed
-	%{__sed} -i -e '/^authmodulelist=/{/\buserdb\b/!s/"$/ userdb"/}' /etc/authlib/authdaemonrc
-fi
-/sbin/ldconfig %{_libexecdir}/courier-authlib
-%service -q courier-authlib restart
-
-%postun authuserdb
-if [ "$1" = 0 ]; then
-	# remove from authmodulelist if package is removed
-	%{__sed} -i -e '/^authmodulelist=/{s/ \?\buserdb\b \?//}' /etc/authlib/authdaemonrc
-fi
-/sbin/ldconfig %{_libexecdir}/courier-authlib
-%service -q courier-authlib restart
-
 %post authpipe
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
@@ -370,6 +372,38 @@ fi
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
 	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bpipe\b \?//}' /etc/authlib/authdaemonrc
+fi
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+%service -q courier-authlib restart
+
+%post authsqlite
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	%{__sed} -i -e '/^authmodulelist=/{/\bauthsqlite\b/!s/"$/ authsqlite"/}' /etc/authlib/authdaemonrc
+fi
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+%service -q courier-authlib restart
+
+%postun authsqlite
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bauthsqlite\b \?//}' /etc/authlib/authdaemonrc
+fi
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+%service -q courier-authlib restart
+
+%post authuserdb
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	%{__sed} -i -e '/^authmodulelist=/{/\buserdb\b/!s/"$/ userdb"/}' /etc/authlib/authdaemonrc
+fi
+/sbin/ldconfig %{_libexecdir}/courier-authlib
+%service -q courier-authlib restart
+
+%postun authuserdb
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\buserdb\b \?//}' /etc/authlib/authdaemonrc
 fi
 /sbin/ldconfig %{_libexecdir}/courier-authlib
 %service -q courier-authlib restart
@@ -605,6 +639,19 @@ fi
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpgsql.so.0
 %{_libexecdir}/courier-authlib/libauthpgsql.la
 
+%files authpipe
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpipe.so.0
+%{_libexecdir}/courier-authlib/libauthpipe.la
+
+%files authsqlite
+%defattr(644,root,root,755)
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authsqliterc
+%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthsqlite.so
+%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthsqlite.so.0
+%{_libexecdir}/courier-authlib/libauthsqlite.la
+
 %files authuserdb
 %defattr(644,root,root,755)
 %attr(700,root,root) %dir %{_sysconfdir}/authlib/userdb
@@ -617,12 +664,6 @@ fi
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthuserdb.so.0
 %{_libexecdir}/courier-authlib/libauthuserdb.la
 %{_mandir}/man8/*userdb*
-
-%files authpipe
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libexecdir}/courier-authlib/libauthpipe.so
-%attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthpipe.so.0
-%{_libexecdir}/courier-authlib/libauthpipe.la
 
 %if %{with ldap}
 %files -n openldap-schema-courier
