@@ -9,7 +9,7 @@ Version:	0.65.0
 Release:	1
 License:	GPL
 Group:		Networking/Daemons
-Source0:	http://dl.sourceforge.net/courier/%{name}-%{version}.tar.bz2
+Source0:	http://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 # Source0-md5:	e9287e33b0e70ea3745517b4d719948d
 Source1:	%{name}.init
 Patch0:		%{name}-md5sum-passwords.patch
