@@ -7,7 +7,7 @@ Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.65.0
 Release:	1
-License:	GPL
+License:	GPL v3 with OpenSSL exception
 Group:		Networking/Daemons
 Source0:	http://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 # Source0-md5:	e9287e33b0e70ea3745517b4d719948d
@@ -17,12 +17,12 @@ Patch1:		%{name}-authdaemonrc.patch
 Patch2:		%{name}-nostatic.patch
 Patch3:		%{name}-ltdl.patch
 URL:		http://www.courier-mta.org/authlib/
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake
 BuildRequires:	db-devel
 BuildRequires:	expect
-BuildRequires:	libltdl-devel
-BuildRequires:	libtool
+BuildRequires:	libltdl-devel >= 2:2
+BuildRequires:	libtool >= 2:2
 BuildRequires:	mysql-devel
 %{?with_ldap:BuildRequires:	openldap-devel >= 2.3.0}
 BuildRequires:	pam-devel
@@ -234,8 +234,6 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 %patch2 -p1
 %patch3 -p1
 
-rm -rf libltdl
-
 %build
 # Change Makefile.am files and force recreate Makefile.in's.
 OLDDIR=`pwd`
@@ -258,7 +256,7 @@ find -type f -a \( -name configure.in -o -name configure.ac \) | while read FILE
 done
 
 %configure \
-	--enable-ltdl-install=no \
+	--disable-ltdl-install \
 	%{!?with_ldap:--without-authldap} \
 	--with-db=db \
 	--with-mailuser=daemon \
@@ -281,12 +279,12 @@ install makedat/makedat $RPM_BUILD_ROOT%{_bindir}/makedat
 
 # make config files
 ./sysconftool $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
 
 touch $RPM_BUILD_ROOT%{_localstatedir}/spool/authdaemon/socket
 
 # remove static library - for now
-rm $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/courier-authlib/*.a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -599,7 +597,9 @@ fi
 %attr(755,root,root) %{_sbindir}/authpasswd
 %attr(755,root,root) %{_sbindir}/authtest
 %attr(755,root,root) %{_sbindir}/courierlogger
-%{_mandir}/man1/*
+%{_mandir}/man1/authpasswd.1*
+%{_mandir}/man1/authtest.1*
+%{_mandir}/man1/courierlogger.1*
 
 %files libs
 %defattr(644,root,root,755)
@@ -611,9 +611,10 @@ fi
 %defattr(644,root,root,755)
 %doc authlib.html auth_*.html
 %attr(755,root,root) %{_bindir}/courierauthconfig
-%{_includedir}/*
-%{_mandir}/man3/*
-%attr(755,root,root) %{_libexecdir}/courier-authlib/*.so
+%{_includedir}/courier_auth_config.h
+%{_includedir}/courierauth*.h
+%{_mandir}/man3/auth_*.3*
+%{_mandir}/man3/authlib.3*
 
 %if %{with ldap}
 %files authldap
@@ -663,10 +664,12 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/libauthuserdb.so
 %attr(755,root,root) %ghost %{_libexecdir}/courier-authlib/libauthuserdb.so.0
 %{_libexecdir}/courier-authlib/libauthuserdb.la
-%{_mandir}/man8/*userdb*
+%{_mandir}/man8/makeuserdb.8*
+%{_mandir}/man8/userdb.8*
+%{_mandir}/man8/userdbpw.8*
 
 %if %{with ldap}
 %files -n openldap-schema-courier
 %defattr(644,root,root,755)
-%{schemadir}/*.schema
+%{schemadir}/courier.schema
 %endif
