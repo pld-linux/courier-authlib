@@ -6,7 +6,7 @@ Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.65.0
-Release:	1
+Release:	2
 License:	GPL v3 with OpenSSL exception
 Group:		Networking/Daemons
 Source0:	http://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -77,8 +77,8 @@ Requires:	%{name} = %{version}-%{release}
 %{?with_ldap:Requires:	%{name}-authldap = %{version}-%{release}}
 Requires:	%{name}-authmysql = %{version}-%{release}
 Requires:	%{name}-authpgsql = %{version}-%{release}
-Requires:	%{name}-authuserdb = %{version}-%{release}
 Requires:	%{name}-authpipe = %{version}-%{release}
+Requires:	%{name}-authuserdb = %{version}-%{release}
 
 %description devel
 This package contains the development files needed to compile Courier
@@ -220,6 +220,9 @@ Group:		Networking/Daemons
 Requires(post,postun):	sed >= 4.0
 Requires:	openldap-servers
 Requires:	sed >= 4.0
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description -n openldap-schema-courier
 This package contains Courier authldap.schema for openldap.
@@ -273,9 +276,9 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb,%{schemadir},%{_bindir}}
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
-install authldap.schema $RPM_BUILD_ROOT%{schemadir}/courier.schema
-install makedat/makedat $RPM_BUILD_ROOT%{_bindir}/makedat
+install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
+cp -p authldap.schema $RPM_BUILD_ROOT%{schemadir}/courier.schema
+install -p makedat/makedat $RPM_BUILD_ROOT%{_bindir}/makedat
 
 # make config files
 ./sysconftool $RPM_BUILD_ROOT%{_sysconfdir}/authlib/*.dist
