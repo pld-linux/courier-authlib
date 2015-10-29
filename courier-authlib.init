@@ -62,6 +62,17 @@ reload() {
 	RETVAL=$?
 }
 
+condrestart() {
+	if [ ! -f /var/lock/subsys/courier-authlib ]; then
+		msg_not_running courier-authlib
+		RETVAL=$1
+		return
+	fi
+
+	stop
+	start
+}
+
 RETVAL=0
 # See how we were called.
 case "$1" in
@@ -75,6 +86,9 @@ case "$1" in
   	stop
 	start
 	;;
+  try-restart)
+	condrestart 0
+	;;
   reload|force-reload|graceful)
 	reload
 	;;
@@ -83,7 +97,7 @@ case "$1" in
 	RETVAL=$?
 	;;
   *)
-	msg_usage "$0 {start|stop|restart|reload|force-reload|graceful|status}"
+	msg_usage "$0 {start|stop|restart|reload|force-reload|graceful|try-restart|status}"
 	exit 3
 	;;
 esac
