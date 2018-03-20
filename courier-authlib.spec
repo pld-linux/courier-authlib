@@ -76,12 +76,7 @@ dla innych aplikacji Couriera.
 Summary:	Development files for the Courier authentication library
 Summary(pl.UTF-8):	Pliki programistyczne dla biblioteki uwierzytelniania Couriera
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-%{?with_ldap:Requires:	%{name}-authldap = %{version}-%{release}}
-Requires:	%{name}-authmysql = %{version}-%{release}
-Requires:	%{name}-authpgsql = %{version}-%{release}
-Requires:	%{name}-authpipe = %{version}-%{release}
-Requires:	%{name}-authuserdb = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 This package contains the development files needed to compile Courier
