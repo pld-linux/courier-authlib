@@ -6,7 +6,7 @@ Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
 Version:	0.68.0
-Release:	1
+Release:	2
 License:	GPL v3 with OpenSSL exception
 Group:		Networking/Daemons
 Source0:	http://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
@@ -57,38 +57,35 @@ Biblioteka uwierzytelniania Couriera dostarcza usługi uwierzytelniania
 dla innych aplikacji Couriera.
 
 %package libs
-Summary:	Courier authentication library
-Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
+Summary:	Courier authentication libraries
+Summary(pl.UTF-8):	Biblioteki uwierzytelniania Couriera
 Group:		Libraries
 
 %description libs
-The Courier authentication library provides authentication services
+The Courier authentication libraries provide authentication services
 for other Courier applications.
 
-This package contains libcourierauth.so which client programs link
-against.
-
 %description libs -l pl.UTF-8
-Biblioteka uwierzytelniania Couriera dostarcza usługi uwierzytelniania
-dla innych aplikacji Couriera.
+Biblioteki uwierzytelniania Couriera dostarczają usługi
+uwierzytelniania dla innych aplikacji Couriera.
 
 %package devel
-Summary:	Development files for the Courier authentication library
-Summary(pl.UTF-8):	Pliki programistyczne dla biblioteki uwierzytelniania Couriera
+Summary:	Development files for the Courier authentication libraries
+Summary(pl.UTF-8):	Pliki programistyczne dla bibliotek uwierzytelniania Couriera
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 This package contains the development files needed to compile Courier
-packages that use this authentication library. Install this package in
-order to build the rest of the Courier packages. After they are built
-and installed this package can be removed. Files in this package are
-not needed at runtime.
+packages that use this authentication libraries. Install this package
+in order to build the rest of the Courier packages. After they are
+built and installed this package can be removed. Files in this package
+are not needed at runtime.
 
 %description devel -l pl.UTF-8
 Ten pakiet zawiera pliki programistyczne potrzebne do kompilacji
-pakietów Couriera używających biblioteki uwierzytelniania. Należy go
-zainstalować aby zbudować resztę pakietów Couriera. Po ich zbudowaniu
+pakietów Couriera używających bibliotek uwierzytelniania. Należy go
+zainstalować, aby zbudować resztę pakietów Couriera. Po ich zbudowaniu
 i zainstalowaniu ten pakiet można usunąć. Pliki z tego pakietu nie są
 potrzebne w czasie działania programów.
 
@@ -551,9 +548,6 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/makedatprog
 %attr(755,root,root) %{_libdir}/courier-authlib/libauthcustom.so
 %attr(755,root,root) %{_libdir}/courier-authlib/libauthpam.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthcommon.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsasl.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsaslclient.so
 %attr(770,root,daemon) %dir %{_localstatedir}/spool/authdaemon
 %attr(777,root,root) %ghost %{_localstatedir}/spool/authdaemon/socket
 %attr(755,root,root) %{_sbindir}/authdaemond
@@ -569,6 +563,9 @@ fi
 %defattr(644,root,root,755)
 %dir %{_libdir}/courier-authlib
 %attr(755,root,root) %{_libdir}/courier-authlib/libcourierauth.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthcommon.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsasl.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsaslclient.so
 
 %files devel
 %defattr(644,root,root,755)
@@ -585,6 +582,7 @@ fi
 %doc authldap.schema README.ldap
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authldaprc
 %attr(755,root,root) %{_libdir}/courier-authlib/libauthldap.so
+%endif
 
 %files authmysql
 %defattr(644,root,root,755)
