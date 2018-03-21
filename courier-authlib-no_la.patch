@@ -21,3 +21,16 @@
  		pt=lt_dlsym(h, buf2);
  		if (pt == NULL)
  		{
+--- courier-authlib-0.68.0/authinfo.c.orig	2013-08-25 20:44:47.000000000 +0200
++++ courier-authlib-0.68.0/authinfo.c	2018-03-21 20:10:48.566256960 +0100
+@@ -105,8 +105,8 @@
+ 			       
+ 		if (strcmp(argv[n], "--ldflags") == 0)
+ 		{
+-			printf("-L%s\n",
+-			       PKGLIBDIR);
++			printf("-L%s -Wl,-rpath,%s\n",
++			       PKGLIBDIR, PKGLIBDIR);
+ 		}
+ 		if (strcmp(argv[n], "--cppflags") == 0)
+ 		{
