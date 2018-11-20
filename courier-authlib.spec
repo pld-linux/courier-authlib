@@ -5,12 +5,12 @@
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.68.0
-Release:	3
+Version:	0.69.0
+Release:	1
 License:	GPL v3 with OpenSSL exception
 Group:		Networking/Daemons
 Source0:	http://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	50b67ed13de80eb83ad50e57d8023433
+# Source0-md5:	581ed4b8a39d00b11f7fe1e534ce57ff
 Source1:	%{name}.init
 Patch0:		%{name}-md5sum-passwords.patch
 Patch1:		%{name}-authdaemonrc.patch
@@ -20,10 +20,10 @@ URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake
 # just for librfc822.la, which is finally not used
-BuildRequires:	courier-unicode-devel >= 2.0
+BuildRequires:	courier-unicode-devel >= 2.1
 BuildRequires:	db-devel
 BuildRequires:	expect
-# for librfc822.la
+# just for librfc822.la, which is finally not used
 BuildRequires:	libidn-devel >= 0.0.0
 BuildRequires:	libltdl-devel >= 2:2
 BuildRequires:	libtool >= 2:2
@@ -33,7 +33,7 @@ BuildRequires:	pam-devel
 BuildRequires:	pkgconfig
 BuildRequires:	postgresql-devel
 BuildRequires:	rpmbuild(macros) >= 1.304
-BuildRequires:	sqlite3-devel
+BuildRequires:	sqlite3-devel >= 3
 BuildRequires:	sysconftool
 BuildRequires:	zlib-devel
 Requires(post,preun):	/sbin/chkconfig
