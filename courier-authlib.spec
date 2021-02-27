@@ -215,9 +215,7 @@ Group:		Networking/Daemons
 Requires(post,postun):	sed >= 4.0
 Requires:	openldap-servers
 Requires:	sed >= 4.0
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description -n openldap-schema-courier
 This package contains Courier authldap.schema for openldap.
