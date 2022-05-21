@@ -40,10 +40,10 @@ Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	/sbin/chkconfig
 Requires:	rc-scripts
-Obsoletes:	sqwebmail-auth-cram
-Obsoletes:	sqwebmail-auth-pam
-Obsoletes:	sqwebmail-auth-pwd
-Obsoletes:	sqwebmail-auth-shadow
+Obsoletes:	sqwebmail-auth-cram < 5
+Obsoletes:	sqwebmail-auth-pam < 5
+Obsoletes:	sqwebmail-auth-pwd < 5
+Obsoletes:	sqwebmail-auth-shadow < 5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		schemadir	/usr/share/openldap/schema
@@ -95,9 +95,9 @@ Summary(pl.UTF-8):	Obsługa LDAP dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	courier-authldap
-Obsoletes:	courier-imap-authldap
-Obsoletes:	sqwebmail-auth-ldap
+Obsoletes:	courier-authldap < 0.49
+Obsoletes:	courier-imap-authldap < 4
+Obsoletes:	sqwebmail-auth-ldap < 5
 
 %description authldap
 This package installs LDAP support for the Courier authentication
@@ -115,9 +115,9 @@ Summary(pl.UTF-8):	Obsługa MySQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	courier-authmysql
-Obsoletes:	courier-imap-authmysql
-Obsoletes:	sqwebmail-auth-mysql
+Obsoletes:	courier-authmysql < 0.49
+Obsoletes:	courier-imap-authmysql < 4
+Obsoletes:	sqwebmail-auth-mysql < 5
 
 %description authmysql
 This package installs MySQL support for the Courier authentication
@@ -135,9 +135,9 @@ Summary(pl.UTF-8):	Obsługa PostgreSQL dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	courier-authpgsql
-Obsoletes:	courier-imap-authpgsql
-Obsoletes:	sqwebmail-auth-pgsql
+Obsoletes:	courier-authpgsql < 0.49
+Obsoletes:	courier-imap-authpgsql < 4
+Obsoletes:	sqwebmail-auth-pgsql < 5
 
 %description authpgsql
 This package installs PostgreSQL support for the Courier
@@ -155,7 +155,7 @@ Summary(pl.UTF-8):	Zewnętrzny moduł uwierzytelniający komunikujący się prze
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	courier-authlib-authpipe
+Obsoletes:	courier-authlib-pipe < 0.59.1-2
 
 %description authpipe
 This package installs the authpipe module, which is a generic plugin
@@ -190,9 +190,9 @@ Summary(pl.UTF-8):	Obsługa userdb dla biblioteki uwierzytelniania Couriera
 Group:		Networking/Daemons
 Requires(pre,postun):	sed >= 4.0
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	courier-authlib-userdb
-Obsoletes:	courier-imap-userdb
-Obsoletes:	sqwebmail-auth-userdb
+Obsoletes:	courier-authlib-userdb < 0.59.1-2
+Obsoletes:	courier-imap-userdb < 4
+Obsoletes:	sqwebmail-auth-userdb < 5
 
 %description authuserdb
 This package installs the userdb support for the Courier
