@@ -105,13 +105,13 @@
  
  EXTRA_DIST=testsuite.txt hmac.c
  
---- courier-authlib-0.68.0.orig/userdb/Makefile.am	2008-05-08 19:20:40.000000000 +0200
-+++ courier-authlib-0.68.0/userdb/Makefile.am	2008-05-29 15:33:17.000000000 +0200
-@@ -17,7 +17,6 @@
+--- courier-authlib-0.71.4/userdb/Makefile.am.orig	2022-05-21 22:11:47.387647448 +0200
++++ courier-authlib-0.71.4/userdb/Makefile.am	2022-05-21 22:12:28.227426200 +0200
+@@ -16,7 +16,6 @@ noinst_DATA=makeuserdb.html userdb.html
  
  userdbpw_SOURCES=userdbpw.c
  userdbpw_LDADD=libuserdb.la @HMACLIB@ @MD5LIB@ @SHA1LIB@ @CRYPTLIBS@
 -userdbpw_LDFLAGS=-static
  
- man8=makeuserdb.8 userdb.8 userdbpw.8
+ man8=makeuserdb.8 userdb.8 userdbpw.8 pw2userdb.8
  man_MANS=$(man8)

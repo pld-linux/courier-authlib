@@ -1,8 +1,8 @@
 make authmodulelist be only modules that are installed with core package
 the other modules are appended to list by sed.
 
---- ./authdaemonrc.in~	2005-07-05 15:25:08.000000000 +0300
-+++ ./authdaemonrc.in	2005-09-19 17:42:11.000000000 +0300
+--- courier-authlib-0.71.4/authdaemonrc.in.orig	2022-05-21 22:10:44.871319461 +0200
++++ courier-authlib-0.71.4/authdaemonrc.in	2022-05-21 22:11:30.434405958 +0200
 @@ -24,7 +24,7 @@
  # by removing them from the following list.  The available modules you
  # can use are: @ALLMODULES@
@@ -10,5 +10,5 @@ the other modules are appended to list by sed.
 -authmodulelist="@ALLMODULES@"
 +authmodulelist="authpam authcustom"
  
- ##NAME: authmodulelistorig:3
+ ##NAME: authmodulelistorig:4
  #

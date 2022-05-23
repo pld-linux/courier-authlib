@@ -5,17 +5,16 @@
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.69.0
+Version:	0.71.4
 Release:	1
 License:	GPL v3 with OpenSSL exception
 Group:		Networking/Daemons
 Source0:	http://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	581ed4b8a39d00b11f7fe1e534ce57ff
+# Source0-md5:	9c0a5657760065c4a49fcb7fc8b4b0e1
 Source1:	%{name}.init
 Patch0:		%{name}-md5sum-passwords.patch
 Patch1:		%{name}-authdaemonrc.patch
 Patch2:		%{name}-nostatic.patch
-Patch3:		%{name}-no_la.patch
 URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake
@@ -47,6 +46,9 @@ Obsoletes:	sqwebmail-auth-shadow < 5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		schemadir	/usr/share/openldap/schema
+
+# refers to tcpremoteip variable from daemon
+%define		skip_post_check_so	libauthpam.so.*
 
 %description
 The Courier authentication library provides authentication services
@@ -89,6 +91,19 @@ zainstalować, aby zbudować resztę pakietów Couriera. Po ich zbudowaniu
 i zainstalowaniu ten pakiet można usunąć. Pliki z tego pakietu nie są
 potrzebne w czasie działania programów.
 
+%package authcustom
+Summary:	Custom module for the Courier authentication library
+Summary(pl.UTF-8):	Moduł custom dla biblioteki uwierzytelniania Couriera
+Group:		Networking/Daemons
+Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
+
+%description authcustom
+Custom module for the Courier authentication library.
+
+%description authcustom -l pl.UTF-8
+Moduł custom dla biblioteki uwierzytelniania Couriera.
+
 %package authldap
 Summary:	LDAP support for the Courier authentication library
 Summary(pl.UTF-8):	Obsługa LDAP dla biblioteki uwierzytelniania Couriera
@@ -128,6 +143,19 @@ using MySQL.
 Ten pakiet dodaje obsługę MySQL do biblioteki uwierzytelniania
 Couriera. Należy go zainstalować aby móc uwierzytelniać się z użyciem
 MySQL.
+
+%package authpam
+Summary:	PAM module for the Courier authentication library
+Summary(pl.UTF-8):	Moduł PAM dla biblioteki uwierzytelniania Couriera
+Group:		Networking/Daemons
+Requires(pre,postun):	sed >= 4.0
+Requires:	%{name} = %{version}-%{release}
+
+%description authpam
+PAM module for the Courier authentication library.
+
+%description authpam -l pl.UTF-8
+Moduł PAM dla biblioteki uwierzytelniania Couriera.
 
 %package authpgsql
 Summary:	PostgreSQL support for the Courier authentication library
@@ -228,7 +256,6 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 %{__libtoolize}
@@ -289,6 +316,20 @@ if [ "$1" = "0" ]; then
 	%service courier-authlib stop
 fi
 
+%post authcustom
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	%{__sed} -i -e '/^authmodulelist=/{/\bauthcustom\b/!s/"$/ authcustom"/}' /etc/authlib/authdaemonrc
+fi
+%service -q courier-authlib restart
+
+%postun authcustom
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bauthldap\b \?//}' /etc/authlib/authdaemonrc
+fi
+%service -q courier-authlib restart
+
 %post authldap
 if [ "$1" = 1 ]; then
 	# add to authmodulelist list if package is first installed
@@ -314,6 +355,20 @@ fi
 if [ "$1" = 0 ]; then
 	# remove from authmodulelist if package is removed
 	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bauthmysql\b \?//}' /etc/authlib/authdaemonrc
+fi
+%service -q courier-authlib restart
+
+%post authpam
+if [ "$1" = 1 ]; then
+	# add to authmodulelist list if package is first installed
+	%{__sed} -i -e '/^authmodulelist=/{/\bauthpam\b/!s/"$/ authpam"/}' /etc/authlib/authdaemonrc
+fi
+%service -q courier-authlib restart
+
+%postun authpam
+if [ "$1" = 0 ]; then
+	# remove from authmodulelist if package is removed
+	%{__sed} -i -e '/^authmodulelist=/{s/ \?\bauthpam\b \?//}' /etc/authlib/authdaemonrc
 fi
 %service -q courier-authlib restart
 
@@ -560,46 +615,57 @@ fi
 %files libs
 %defattr(644,root,root,755)
 %dir %{_libdir}/courier-authlib
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauth.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthcommon.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsasl.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsaslclient.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauth.so.*
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthcommon.so.*
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsasl.so.*
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsaslclient.so.*
 
 %files devel
 %defattr(644,root,root,755)
 %doc authlib.html auth_*.html
 %attr(755,root,root) %{_bindir}/courierauthconfig
-%{_includedir}/courier_auth_config.h
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauth.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthcommon.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsasl.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsaslclient.so
 %{_includedir}/courierauth*.h
 %{_mandir}/man3/auth_*.3*
 %{_mandir}/man3/authlib.3*
+
+%files authcustom
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/courier-authlib/libauthcustom.so*
 
 %if %{with ldap}
 %files authldap
 %defattr(644,root,root,755)
 %doc authldap.schema README.ldap
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authldaprc
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthldap.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libauthldap.so*
 %endif
 
 %files authmysql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authmysqlrc
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthmysql.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libauthmysql.so*
+
+%files authpam
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/courier-authlib/libauthpam.so*
 
 %files authpgsql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authpgsqlrc
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthpgsql.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libauthpgsql.so*
 
 %files authpipe
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthpipe.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libauthpipe.so*
 
 %files authsqlite
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authsqliterc
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthsqlite.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libauthsqlite.so*
 
 %files authuserdb
 %defattr(644,root,root,755)
@@ -609,7 +675,7 @@ fi
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_sbindir}/userdbpw
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthuserdb.so
+%attr(755,root,root) %{_libdir}/courier-authlib/libauthuserdb.so*
 %{_mandir}/man8/makeuserdb.8*
 %{_mandir}/man8/pw2userdb.8*
 %{_mandir}/man8/userdb.8*
