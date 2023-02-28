@@ -5,12 +5,12 @@
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.71.4
-Release:	2
+Version:	0.72.0
+Release:	1
 License:	GPL v3 with OpenSSL exception
 Group:		Networking/Daemons
-Source0:	http://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	9c0a5657760065c4a49fcb7fc8b4b0e1
+Source0:	https://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
+# Source0-md5:	d7b1a8e95188423ad4a33b5ea7db6405
 Source1:	%{name}.init
 Patch0:		%{name}-md5sum-passwords.patch
 Patch1:		%{name}-authdaemonrc.patch
@@ -23,7 +23,7 @@ BuildRequires:	courier-unicode-devel >= 2.1
 BuildRequires:	db-devel
 BuildRequires:	expect
 # just for librfc822.la, which is finally not used
-BuildRequires:	libidn-devel >= 0.0.0
+BuildRequires:	libidn2-devel >= 0.0.0
 BuildRequires:	libltdl-devel >= 2:2
 BuildRequires:	libtool >= 2:2
 BuildRequires:	mysql-devel
@@ -673,7 +673,6 @@ fi
 %attr(755,root,root) %{_sbindir}/makeuserdb
 %attr(755,root,root) %{_sbindir}/pw2userdb
 %attr(755,root,root) %{_sbindir}/userdb
-%attr(755,root,root) %{_sbindir}/userdb-test-cram-md5
 %attr(755,root,root) %{_sbindir}/userdbpw
 %attr(755,root,root) %{_libdir}/courier-authlib/libauthuserdb.so*
 %{_mandir}/man8/makeuserdb.8*
