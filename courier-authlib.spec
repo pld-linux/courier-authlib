@@ -5,12 +5,12 @@
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.72.0
+Version:	0.72.4
 Release:	1
 License:	GPL v3 with OpenSSL exception
 Group:		Networking/Daemons
 Source0:	https://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	d7b1a8e95188423ad4a33b5ea7db6405
+# Source0-md5:	adca23d21c1cf21f0c5ea9b803949120
 Source1:	%{name}.init
 Patch0:		%{name}-md5sum-passwords.patch
 Patch1:		%{name}-authdaemonrc.patch
@@ -253,9 +253,9 @@ Ten pakiet zawiera schemat Couriera authldap.schema dla openldapa.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
+%patch -P0 -p1
+%patch -P1 -p1
+%patch -P2 -p1
 
 %build
 %{__libtoolize}
