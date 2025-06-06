@@ -599,8 +599,6 @@ fi
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authdaemond
 %attr(755,root,root) %{_libexecdir}/courier-authlib/authsystem.passwd
 %attr(755,root,root) %{_libexecdir}/courier-authlib/makedatprog
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthcustom.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthpam.so
 %attr(770,root,daemon) %dir %{_localstatedir}/spool/authdaemon
 %attr(777,root,root) %ghost %{_localstatedir}/spool/authdaemon/socket
 %attr(755,root,root) %{_sbindir}/authdaemond
