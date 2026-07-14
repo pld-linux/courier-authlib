@@ -5,12 +5,12 @@
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
 Name:		courier-authlib
-Version:	0.72.4
-Release:	2
+Version:	0.73.1
+Release:	1
 License:	GPL v3 with OpenSSL exception
 Group:		Networking/Daemons
 Source0:	https://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
-# Source0-md5:	adca23d21c1cf21f0c5ea9b803949120
+# Source0-md5:	a3af667709441eb4f5b32219451b98e4
 Source1:	%{name}.init
 Source2:	courier-authldap.schema
 Patch0:		%{name}-md5sum-passwords.patch
@@ -20,11 +20,11 @@ URL:		http://www.courier-mta.org/authlib/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake
 # just for librfc822.la, which is finally not used
-BuildRequires:	courier-unicode-devel >= 2.1
+BuildRequires:	courier-unicode-devel >= 2.6
 BuildRequires:	db-devel
 BuildRequires:	expect
 # just for librfc822.la, which is finally not used
-BuildRequires:	libidn2-devel >= 0.0.0
+BuildRequires:	libidn2-devel >= 2.0.5
 BuildRequires:	libltdl-devel >= 2:2
 BuildRequires:	libtool >= 2:2
 BuildRequires:	mysql-devel
@@ -589,7 +589,7 @@ fi
 %files
 %defattr(644,root,root,755)
 # COPYING contains only note
-%doc AUTHORS COPYING ChangeLog NEWS README README*html README.authmysql.myownquery authldap.schema
+%doc AUTHORS COPYING ChangeLog NEWS README README*html README.authmysql.myownquery
 %attr(755,root,root) %{_bindir}/makedat
 %dir %{_sysconfdir}/authlib
 %attr(754,root,root) /etc/rc.d/init.d/courier-authlib
@@ -614,57 +614,57 @@ fi
 %files libs
 %defattr(644,root,root,755)
 %dir %{_libdir}/courier-authlib
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauth.so.*
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthcommon.so.*
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsasl.so.*
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsaslclient.so.*
+%{_libdir}/courier-authlib/libcourierauth.so.*
+%{_libdir}/courier-authlib/libcourierauthcommon.so.*
+%{_libdir}/courier-authlib/libcourierauthsasl.so.*
+%{_libdir}/courier-authlib/libcourierauthsaslclient.so.*
 
 %files devel
 %defattr(644,root,root,755)
 %doc authlib.html auth_*.html
 %attr(755,root,root) %{_bindir}/courierauthconfig
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauth.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthcommon.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsasl.so
-%attr(755,root,root) %{_libdir}/courier-authlib/libcourierauthsaslclient.so
+%{_libdir}/courier-authlib/libcourierauth.so
+%{_libdir}/courier-authlib/libcourierauthcommon.so
+%{_libdir}/courier-authlib/libcourierauthsasl.so
+%{_libdir}/courier-authlib/libcourierauthsaslclient.so
 %{_includedir}/courierauth*.h
 %{_mandir}/man3/auth_*.3*
 %{_mandir}/man3/authlib.3*
 
 %files authcustom
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthcustom.so*
+%{_libdir}/courier-authlib/libauthcustom.so*
 
 %if %{with ldap}
 %files authldap
 %defattr(644,root,root,755)
-%doc authldap.schema README.ldap
+%doc authldap.ldif README.ldap
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authldaprc
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthldap.so*
+%{_libdir}/courier-authlib/libauthldap.so*
 %endif
 
 %files authmysql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authmysqlrc
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthmysql.so*
+%{_libdir}/courier-authlib/libauthmysql.so*
 
 %files authpam
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthpam.so*
+%{_libdir}/courier-authlib/libauthpam.so*
 
 %files authpgsql
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authpgsqlrc
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthpgsql.so*
+%{_libdir}/courier-authlib/libauthpgsql.so*
 
 %files authpipe
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthpipe.so*
+%{_libdir}/courier-authlib/libauthpipe.so*
 
 %files authsqlite
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/authlib/authsqliterc
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthsqlite.so*
+%{_libdir}/courier-authlib/libauthsqlite.so*
 
 %files authuserdb
 %defattr(644,root,root,755)
@@ -673,7 +673,7 @@ fi
 %attr(755,root,root) %{_sbindir}/pw2userdb
 %attr(755,root,root) %{_sbindir}/userdb
 %attr(755,root,root) %{_sbindir}/userdbpw
-%attr(755,root,root) %{_libdir}/courier-authlib/libauthuserdb.so*
+%{_libdir}/courier-authlib/libauthuserdb.so*
 %{_mandir}/man8/makeuserdb.8*
 %{_mandir}/man8/pw2userdb.8*
 %{_mandir}/man8/userdb.8*
