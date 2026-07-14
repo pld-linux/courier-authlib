@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_without	ldap		# do not include LDAP support
+%bcond_without	ldap		# LDAP support
 
 Summary:	Courier authentication library
 Summary(pl.UTF-8):	Biblioteka uwierzytelniania Couriera
@@ -12,6 +12,7 @@ Group:		Networking/Daemons
 Source0:	https://downloads.sourceforge.net/courier/%{name}-%{version}.tar.bz2
 # Source0-md5:	adca23d21c1cf21f0c5ea9b803949120
 Source1:	%{name}.init
+Source2:	courier-authldap.schema
 Patch0:		%{name}-md5sum-passwords.patch
 Patch1:		%{name}-authdaemonrc.patch
 Patch2:		%{name}-nostatic.patch
@@ -293,7 +294,7 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/authlib/userdb,%{schemadir},%{_bindir}}
 install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/courier-authlib
-cp -p authldap.schema $RPM_BUILD_ROOT%{schemadir}/courier.schema
+cp -p %{SOURCE2} $RPM_BUILD_ROOT%{schemadir}/courier-authldap.schema
 install -p libs/makedat/makedat $RPM_BUILD_ROOT%{_bindir}/makedat
 
 # make config files
@@ -681,5 +682,5 @@ fi
 %if %{with ldap}
 %files -n openldap-schema-courier
 %defattr(644,root,root,755)
-%{schemadir}/courier.schema
+%{schemadir}/courier-authldap.schema
 %endif
